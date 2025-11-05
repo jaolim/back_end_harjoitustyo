@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Cities of Finland</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <h1>Cities of Finland</h1>
+
+    <button onClick="testButton()">Test Button</button>
+
+    <div id="testResult"></div>
+</body>
+
+<script>
+    function testButton() {
+        const result = document.getElementById("testResult");
+        if (result.textContent == "It worked!") {
+            result.textContent = "";
+        } else 
+        result.textContent = "It worked!";
+    }
+</script>
