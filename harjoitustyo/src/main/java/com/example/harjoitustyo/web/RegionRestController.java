@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,9 +56,25 @@ public class RegionRestController {
     @DeleteMapping("/regions/{id}")
     public void deleteRegion(@PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("Region for id " + id + " does not exist");
+            throw new CustomNotFoundException("Region by id " + id + " does not exist");
         }
         rRepository.deleteById(id);
+    }
+
+    @PutMapping("/regions/{id}")
+    public Optional<Region> patchRegion(@RequestBody Region newRegion, @PathVariable Long id) {
+        if (!rRepository.findById(id).isPresent()) {
+            throw new CustomNotFoundException("Region by id" + id + " does not exist");
+        }
+
+        return rRepository.findById(id)
+                .map(region -> {
+                    region.setName(newRegion.getName());
+                    region.setDescription(newRegion.getDescription());
+                    region.setImage(newRegion.getImage());
+                    return rRepository.save(region);
+                });
+
     }
 
 }
