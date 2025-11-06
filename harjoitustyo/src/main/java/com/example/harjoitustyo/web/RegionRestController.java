@@ -41,4 +41,14 @@ public class RegionRestController {
         return region;
     }
 
+    @PostMapping("/regions")
+    public Region postRegion(@RequestBody Region region) {
+        if (region.getRegionId() != null) {
+            throw new CustomBadRequestException("Do not include regionId");
+        } else if (region.getName() == null || region.getName().isEmpty()) {
+            throw new CustomBadRequestException("Region name cannot be empty");
+        }
+        return rRepository.save(region);
+    }
+
 }
