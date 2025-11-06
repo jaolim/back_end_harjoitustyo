@@ -1,8 +1,17 @@
 package com.example.harjoitustyo.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 
+@Entity
 public class City {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cityId;
 
     @NotBlank(message = "City name is required")
     private String name;
@@ -10,6 +19,10 @@ public class City {
     private int population;
     private double area;
     private String description, image;
+
+    public City () {
+        
+    }
 
     public City (String name) {
         this.name = name;
@@ -62,9 +75,17 @@ public class City {
         return image;
     }
 
+    public void setCityId(Long cityId) {
+        this.cityId = cityId;
+    }
+
+    public Long getCityId() {
+        return cityId;
+    }
+
     @Override
     public String toString() {
-        return "Name: " + name + ", Population: " + population + ", Area: " + area + ", Description: " + description + ", Image source: " + image;
+        return "Name: " + name + ", Population: " + population + ", Area: " + area + ", Description: " + description + ", Image source: " + image +  ", Id: " + cityId;
     }
 
 }

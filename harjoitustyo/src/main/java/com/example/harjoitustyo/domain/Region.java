@@ -66,7 +66,7 @@ public class Region {
 
     @Override
     public String toString() {
-        return "Name: " + name + ", Description: " + description + ", Image source: " + image;
+        return "Name: " + name + ", Description: " + description + ", Image source: " + image + ", Id: " + regionId;
     }
 
 }

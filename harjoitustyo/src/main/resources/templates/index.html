@@ -29,18 +29,28 @@
         <p th:text="${testCity}"></p>
     </div>
 
+    <div>
+        <h2>Database Cities:</h2>
+        <tr th:each="city : ${cities}">
+            <p>
+                <td th:text="${city}"></td>
+            </p>
+
+        </tr>
+    </div>
+
 
     <button onClick="testButton()">Test Button</button>
 
     <div id="testResult"></div>
-</body>
 
-<script>
-    function testButton() {
-        const result = document.getElementById("testResult");
-        if (result.textContent == "It worked!") {
-            result.textContent = "";
-        } else
-            result.textContent = "It worked!";
-    }
-</script>
+    <script>
+        function testButton() {
+            const result = document.getElementById("testResult");
+            if (result.textContent == "It worked!") {
+                result.textContent = "";
+            } else
+                result.textContent = "It worked!";
+        }
+    </script>
+</body>
