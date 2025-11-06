@@ -19,6 +19,7 @@
         <tr th:each="region : ${regions}">
             <p>
                 <td th:text="${region}"></td>
+                <img th:src="${region.getImage()}">
             </p>
 
         </tr>
@@ -34,6 +35,7 @@
         <tr th:each="city : ${cities}">
             <p>
                 <td th:text="${city}"></td>
+                <img th:src="${city.getImage()}">
             </p>
 
         </tr>
