@@ -1,9 +1,15 @@
 package com.example.harjoitustyo.domain;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -12,6 +18,10 @@ public class Region {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long regionId;
+
+    @JsonIgnoreProperties("region")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval =  true, mappedBy = "region")
+    private List<City> cities;
 
     @NotBlank(message = "Region name is required")
     private String name;
@@ -62,6 +72,14 @@ public class Region {
 
     public void setRegionId(Long regionId) {
         this.regionId = regionId;
+    }
+
+    public void setCities(List<City> cities) {
+        this.cities = cities;
+    }
+
+    public List<City> getCities() {
+        return cities;
     }
 
     @Override

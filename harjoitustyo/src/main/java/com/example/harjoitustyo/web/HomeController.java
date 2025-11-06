@@ -22,7 +22,7 @@ public class HomeController {
     }
 
     public static Region testRegion = new Region("Test Region");
-    public static City testCity = new City ("Test City",  123, 321.55 , "Test description");
+    public static City testCity = new City ("Test City",  123, 321.55 , "Test description", testRegion);
 
     @GetMapping(value = { "/", "/index"})
     public String getIndex(Model model) {
