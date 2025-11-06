@@ -16,15 +16,19 @@ import com.example.harjoitustyo.Exception.CustomBadRequestException;
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
+import com.example.harjoitustyo.domain.RegionRepository;
+
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
 public class CityRestController {
 
     private CityRepository cRepository;
+    private RegionRepository rRepository;
 
-    public CityRestController(CityRepository cRepository) {
+    public CityRestController(CityRepository cRepository, RegionRepository rRepository) {
         this.cRepository = cRepository;
+        this.rRepository = rRepository;
     }
 
     @GetMapping(value = "/cities")
@@ -49,6 +53,8 @@ public class CityRestController {
             throw new CustomBadRequestException("Do not include cityId");
         } else if (city.getName() == null || city.getName().isEmpty()) {
             throw new CustomBadRequestException("City name cannot be empty");
+        } else if (city.getRegion() == null || !rRepository.findById(city.getRegion().getRegionId()).isPresent()) {
+            throw new CustomBadRequestException("Wrong or missing Region Id");
         }
         return cRepository.save(city);
     }
@@ -65,8 +71,12 @@ public class CityRestController {
     public Optional<City> putCity(@RequestBody City newCity, @PathVariable Long id) {
         if (!cRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("City by id" + id + " does not exist");
+        } else if (newCity.getName() == null || newCity.getName().isEmpty()) {
+            throw new CustomBadRequestException("City name cannot be empty");
+        } else if (newCity.getRegion() == null || !rRepository.findById(newCity.getRegion().getRegionId()).isPresent()) {
+            throw new CustomBadRequestException("Wrong or missing Region Id");
         }
-        
+
         return cRepository.findById(id)
                 .map(city -> {
                     city.setName(newCity.getName());
@@ -76,8 +86,6 @@ public class CityRestController {
                     city.setImage(newCity.getImage());
                     return cRepository.save(city);
                 });
-                
-                
 
     }
 
