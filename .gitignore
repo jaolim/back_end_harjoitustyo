@@ -4,3 +4,6 @@
 ### backups ###
 *.bkp
 *.dtmp
+
+### environment variables ###
+*.env

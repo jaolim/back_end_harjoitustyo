@@ -1,8 +1,17 @@
 package com.example.harjoitustyo.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 
+@Entity
 public class Region {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long regionId;
 
     @NotBlank(message = "Name is required")
     private String name;
@@ -45,6 +54,14 @@ public class Region {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Long getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(Long regionId) {
+        this.regionId = regionId;
     }
 
     @Override

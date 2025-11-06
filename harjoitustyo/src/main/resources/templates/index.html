@@ -3,15 +3,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <title>Cities of Finland</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Cities of Finland</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
     <h1>Cities of Finland</h1>
 
-    <h2>Test Region</h2>
-    <p th:text="${testRegion}"></p>
+    <div>
+        <h2>Test Region</h2>
+        <p th:text="${testRegion}"></p>
+    </div>
+    <div>
+        <h2>Database Regions:</h2>
+        <tr th:each = "region : ${regions}">
+            <p><td th:text="${region}"></td></p>
+
+        </tr>
+    </div>
+
 
     <button onClick="testButton()">Test Button</button>
 
@@ -23,7 +33,7 @@
         const result = document.getElementById("testResult");
         if (result.textContent == "It worked!") {
             result.textContent = "";
-        } else 
-        result.textContent = "It worked!";
+        } else
+            result.textContent = "It worked!";
     }
 </script>
