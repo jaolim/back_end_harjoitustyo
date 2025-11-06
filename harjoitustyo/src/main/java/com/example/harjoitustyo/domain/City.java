@@ -69,6 +69,14 @@ public class City {
         this.region = region;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public void setPopulation(int population) {
         this.population = population;
     }

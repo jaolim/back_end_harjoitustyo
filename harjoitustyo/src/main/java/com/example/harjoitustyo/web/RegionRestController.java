@@ -62,7 +62,7 @@ public class RegionRestController {
     }
 
     @PutMapping("/regions/{id}")
-    public Optional<Region> patchRegion(@RequestBody Region newRegion, @PathVariable Long id) {
+    public Optional<Region> putRegion(@RequestBody Region newRegion, @PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("Region by id" + id + " does not exist");
         }
