@@ -13,7 +13,7 @@ public class Region {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long regionId;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Region name is required")
     private String name;
 
     private String description, image;

@@ -16,10 +16,17 @@
     </div>
     <div>
         <h2>Database Regions:</h2>
-        <tr th:each = "region : ${regions}">
-            <p><td th:text="${region}"></td></p>
+        <tr th:each="region : ${regions}">
+            <p>
+                <td th:text="${region}"></td>
+            </p>
 
         </tr>
+    </div>
+
+    <div>
+        <h2>Test City</h2>
+        <p th:text="${testCity}"></p>
     </div>
 
 
