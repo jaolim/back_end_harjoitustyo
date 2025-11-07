@@ -57,6 +57,23 @@
         </tr>
     </div>
 
+    <div>
+        <h2>Test AppUser</h2>
+        <p th:text="${testAppUser}"></p>
+    </div>
+
+    <div>
+        <h2>Database AppUsers:</h2>
+        <tr th:each="appUser : ${appUsers}">
+            <p>
+                <td th:text="${appUser}"></td>
+            </p>
+
+        </tr>
+    </div>
+
+
+
 
     <button onClick="testButton()">Test Button</button>
 
