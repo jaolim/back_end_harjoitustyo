@@ -84,6 +84,7 @@ public class CityRestController {
                     city.setArea(newCity.getArea());
                     city.setDescription(newCity.getDescription());
                     city.setImage(newCity.getImage());
+                    city.setRegion(newCity.getRegion());
                     return cRepository.save(city);
                 });
 

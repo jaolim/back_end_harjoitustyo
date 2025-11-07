@@ -82,6 +82,7 @@ public class LocationRestController {
                     location.setName(newLocation.getName());
                     location.setDescription(newLocation.getDescription());
                     location.setImage(newLocation.getImage());
+                    location.setCity(newLocation.getCity());
                     return lRepository.save(location);
                 });
 

@@ -96,7 +96,9 @@ public class CommentRestController {
         return cRepository.findById(id)
                 .map(comment -> {
                     comment.setHeadline(newComment.getHeadline());
-
+                    comment.setBody(newComment.getBody());
+                    comment.setAppUser(newComment.getAppUser());
+                    comment.setLocation(newComment.getLocation());
                     return cRepository.save(comment);
                 });
 
