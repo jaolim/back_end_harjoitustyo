@@ -65,6 +65,8 @@ public class RegionRestController {
     public Optional<Region> putRegion(@RequestBody Region newRegion, @PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("Region by id" + id + " does not exist");
+        } else if (newRegion.getName() == null || newRegion.getName().isEmpty()) {
+            throw new CustomBadRequestException("Region name cannot be empty");
         }
 
         return rRepository.findById(id)
