@@ -15,7 +15,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commanedId;
+    private Long commentId;
 
     @ManyToOne
     @JoinColumn(name = "appUserId")
@@ -60,12 +60,12 @@ public class Comment {
         return body;
     }
 
-    public void setCommanedId(Long commanedId) {
-        this.commanedId = commanedId;
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
     }
 
-    public Long getCommanedId() {
-        return commanedId;
+    public Long getCommentId() {
+        return commentId;
     }
 
     public void setAppUser(AppUser appUser) {
