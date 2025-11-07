@@ -72,6 +72,21 @@
         </tr>
     </div>
 
+        <div>
+        <h2>Test Comment</h2>
+        <p th:text="${testComment}"></p>
+    </div>
+
+    <div>
+        <h2>Database Comments:</h2>
+        <tr th:each="comment : ${comments}">
+            <p>
+                <td th:text="${comment}"></td>
+            </p>
+
+        </tr>
+    </div>
+
 
 
 

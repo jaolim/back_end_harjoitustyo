@@ -9,6 +9,8 @@ import com.example.harjoitustyo.domain.AppUser;
 import com.example.harjoitustyo.domain.AppUserRepository;
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
+import com.example.harjoitustyo.domain.Comment;
+import com.example.harjoitustyo.domain.CommentRepository;
 import com.example.harjoitustyo.domain.Location;
 import com.example.harjoitustyo.domain.LocationRepository;
 import com.example.harjoitustyo.domain.Region;
@@ -23,7 +25,7 @@ public class HarjoitustyoApplication {
 
 	@Bean
 	public CommandLineRunner harjoitustyo(RegionRepository rRepository, CityRepository cRepository,
-			LocationRepository lRepository, AppUserRepository auRepository) {
+			LocationRepository lRepository, AppUserRepository auRepository, CommentRepository coRepository) {
 
 		return (args) -> {
 			Region region1 = new Region("Cmd: Test Region 1");
@@ -35,6 +37,8 @@ public class HarjoitustyoApplication {
 			Location location2 = new Location("Cmd: Test Location 2", "A lovely location indeed", city2);
 			AppUser appUser1 = new AppUser("admin", "asdf", "adminTest", "userTestLast", "ADMIN");
 			AppUser appUser2 = new AppUser("user", "asdf", "userTest", "userTestLast", "USER");
+			Comment comment1 = new Comment("Test headline", "A testful body of text", location1, appUser1);
+			Comment comment2 = new Comment("Test headline", "A testful body of text", location2, appUser2);
 			rRepository.save(region1);
 			rRepository.save(region2);
 			cRepository.save(city1);
@@ -43,6 +47,8 @@ public class HarjoitustyoApplication {
 			lRepository.save(location2);
 			auRepository.save(appUser1);
 			auRepository.save(appUser2);
+			coRepository.save(comment1);
+			coRepository.save(comment2);
 		};
 	}
 

@@ -1,13 +1,17 @@
 package com.example.harjoitustyo.domain;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -25,17 +29,22 @@ public class Location {
     @JsonIgnoreProperties("locations")
     private City city;
 
+    @JsonIgnoreProperties("location")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "location")
+    private List<Comment> comments;
+
     private String description, image;
 
     public Location() {
 
     }
 
-    public Location(String name, City city){
+    public Location(String name, City city) {
         this.name = name;
         this.city = city;
     }
-        public Location(String name, String description, City city) {
+
+    public Location(String name, String description, City city) {
         this.name = name;
         this.description = description;
         this.city = city;
@@ -88,11 +97,18 @@ public class Location {
         return city;
     }
 
-        @Override
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    @Override
     public String toString() {
         return "Name: " + name + ", Description: " + description
                 + ", Image source: " + image + ", Id: " + locationId + ", city: " + city.getName();
     }
-
 
 }
