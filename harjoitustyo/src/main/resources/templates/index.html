@@ -41,6 +41,22 @@
         </tr>
     </div>
 
+    <div>
+        <h2>Test Location</h2>
+        <p th:text="${testLocation}"></p>
+    </div>
+
+    <div>
+        <h2>Database Locations:</h2>
+        <tr th:each="location : ${locations}">
+            <p>
+                <td th:text="${location}"></td>
+                <img th:src="${location.getImage()}">
+            </p>
+
+        </tr>
+    </div>
+
 
     <button onClick="testButton()">Test Button</button>
 

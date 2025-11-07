@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
+import com.example.harjoitustyo.domain.Location;
+import com.example.harjoitustyo.domain.LocationRepository;
 import com.example.harjoitustyo.domain.Region;
 import com.example.harjoitustyo.domain.RegionRepository;
 
@@ -15,21 +17,26 @@ public class HomeController {
 
     private RegionRepository rRepository;
     private CityRepository cRepository;
+    private LocationRepository lRepository;
 
-    public HomeController(RegionRepository rRepository, CityRepository cRepository) {
+    public HomeController(RegionRepository rRepository, CityRepository cRepository, LocationRepository lRepository) {
         this.rRepository = rRepository;
         this.cRepository = cRepository;
+        this.lRepository = lRepository;
     }
 
     public static Region testRegion = new Region("Test Region");
     public static City testCity = new City ("Test City",  123, 321.55 , "Test description", testRegion);
+    public static Location testLocation = new Location("Test Location", testCity);
 
     @GetMapping(value = { "/", "/index"})
     public String getIndex(Model model) {
         model.addAttribute("testCity", testCity);
         model.addAttribute("testRegion", testRegion);
+        model.addAttribute("testLocation", testLocation);
         model.addAttribute("regions", rRepository.findAll());
         model.addAttribute("cities", cRepository.findAll());
+        model.addAttribute("locations", lRepository.findAll());
         return "index";
     }
 

@@ -1,13 +1,17 @@
 package com.example.harjoitustyo.domain;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -22,6 +26,10 @@ public class City {
     @JsonIgnoreProperties("cities")
     private Region region;
 
+    @JsonIgnoreProperties("city")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "city")
+    private List<Location> locations;
+
     @NotBlank(message = "City name is required")
     private String name;
 
@@ -33,23 +41,9 @@ public class City {
 
     }
 
-    public City(String name) {
+    public City(String name, Region region) {
         this.name = name;
-    }
-
-    public City(String name, int population, double area, String description) {
-        this.name = name;
-        this.population = population;
-        this.area = area;
-        this.description = description;
-    }
-
-    public City(String name, int population, double area, String description, String image) {
-        this.name = name;
-        this.population = population;
-        this.area = area;
-        this.description = description;
-        this.image = image;
+        this.region = region;
     }
 
     public City(String name, int population, double area, String description, Region region) {
@@ -60,7 +54,7 @@ public class City {
         this.region = region;
     }
 
-    public City(String name, int population, double area, String description, String image, Region region) {
+    public City(String name, int population, double area, String description, Region region, String image) {
         this.name = name;
         this.population = population;
         this.area = area;
@@ -128,7 +122,7 @@ public class City {
     @Override
     public String toString() {
         return "Name: " + name + ", Population: " + population + ", Area: " + area + ", Description: " + description
-                + ", Image source: " + image + ", Id: " + cityId + ", Region: " + region;
+                + ", Image source: " + image + ", Id: " + cityId + ", Region: " + region.getName();
     }
 
 }

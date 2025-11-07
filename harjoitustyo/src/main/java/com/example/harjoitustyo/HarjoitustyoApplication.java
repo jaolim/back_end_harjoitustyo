@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
+import com.example.harjoitustyo.domain.Location;
+import com.example.harjoitustyo.domain.LocationRepository;
 import com.example.harjoitustyo.domain.Region;
 import com.example.harjoitustyo.domain.RegionRepository;
 
@@ -18,17 +20,21 @@ public class HarjoitustyoApplication {
 	}
 
 	@Bean
-	public CommandLineRunner harjoitustyo(RegionRepository rRepository, CityRepository cRepository) {
+	public CommandLineRunner harjoitustyo(RegionRepository rRepository, CityRepository cRepository, LocationRepository lRepository) {
 
 		return (args) -> {
 			Region region1 = new Region("Cmd: Test Region 1");
 			Region region2 = new Region("Cmd: Test Region 2");
 			City city1 = new City("Cmd: Test City 1", 210542, 80.55, "A city in need is a city indeed", region1);
 			City city2 = new City("Cmd: Test City 2", 55004, 65.55, "To live here is a true test of character", region1);
+			Location location1 = new Location("Cmd: Test Location 1", city1 );
+			Location location2 = new Location("Cmd: Test Location 2", "A lovely location indeed", city2 );
 			rRepository.save(region1);
 			rRepository.save(region2);
 			cRepository.save(city1);
 			cRepository.save(city2);
+			lRepository.save(location1);
+			lRepository.save(location2);
 		};
 	}
 
