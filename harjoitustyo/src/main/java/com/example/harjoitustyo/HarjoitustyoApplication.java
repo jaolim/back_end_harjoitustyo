@@ -33,7 +33,7 @@ public class HarjoitustyoApplication {
 					region1);
 			Location location1 = new Location("Cmd: Test Location 1", city1);
 			Location location2 = new Location("Cmd: Test Location 2", "A lovely location indeed", city2);
-			AppUser appUser1 = new AppUser("admin", "asdf", "userTest", "userTestLast", "ADMIN");
+			AppUser appUser1 = new AppUser("admin", "asdf", "adminTest", "userTestLast", "ADMIN");
 			AppUser appUser2 = new AppUser("user", "asdf", "userTest", "userTestLast", "USER");
 			rRepository.save(region1);
 			rRepository.save(region2);

@@ -76,6 +76,15 @@ public class AppUser {
         return userRole;
     }
 
+    public void setAppUserId(Long appUserId) {
+        this.appUserId = appUserId;
+    }
+
+    public Long getAppUserId() {
+        return appUserId;
+    }
+    
+
     @Override
     public String toString() {
         return "Username: " + username + ", Id: " + appUserId + ", Firstname: " + firstname + ", Lastname: " + lastname + ", PasswordHash: " + passwordHash + ", Role: " + userRole;
