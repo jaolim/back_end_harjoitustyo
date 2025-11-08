@@ -90,6 +90,7 @@ public class LocationRestController {
                     location.setDescription(newLocation.getDescription());
                     location.setImage(newLocation.getImage());
                     location.setCity(newLocation.getCity());
+                    location.setAddress(newLocation.getAddress());
                     return lRepository.save(location);
                 });
 
