@@ -47,12 +47,25 @@
                 <th>Location Address</th>
                 <th>Location Image</th>
             </tr>
-            <tr th:each="location : ${locations}">
+            <tr>
                 <td th:text="${location.name}"></td>
                 <td th:text="${location.description}"></td>
                 <td th:text="${location.address}"></td>
                 <td><img th:src="${location.image}"></td>
-                <td><a class="btn btn-info" th:href="@{/location/{id}(id=${location.locationId})}">View</a></td>
+            </tr>
+        </table>
+        <table class="table table-striped">
+            <tr>
+                <th>Comment Headline</th>
+                <th>Comment Body</th>
+                <th>By User</th>
+                <th>Location Image</th>
+            </tr>
+            <tr th:each="comment : ${comments}">
+                <td th:text="${comment.headline}"></td>
+                <td th:text="${comment.body}"></td>
+                <td th:text="${comment.getAppUser().getUsername()}"></td>
+                <td><a class="btn btn-info" th:href="@{/comments/{id}(id=${comment.commentId})}">View</a></td>
             </tr>
         </table>
     </div>
