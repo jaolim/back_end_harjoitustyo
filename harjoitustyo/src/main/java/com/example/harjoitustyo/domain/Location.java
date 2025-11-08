@@ -33,7 +33,7 @@ public class Location {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "location")
     private List<Comment> comments;
 
-    private String description, image;
+    private String description, image, address;
 
     public Location() {
 
@@ -103,6 +103,14 @@ public class Location {
 
     public List<Comment> getComments() {
         return comments;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     @Override

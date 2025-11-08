@@ -10,7 +10,7 @@
 
 <body>
     <p><a th:href="@{/}">Home</a></p>
-    <h1>Cities by region</h1>
+    <h1>Locations by city</h1>
     <div>
         <table class="table table-striped">
             <tr>
@@ -32,13 +32,28 @@
                 <th>City Area</th>
                 <th>City Image</th>
             </tr>
-            <tr th:each="city : ${cities}">
+            <tr>
                 <td th:text="${city.name}"></td>
                 <td th:text="${city.description}"></td>
                 <td th:text="${city.population}"></td>
                 <td th:text="${city.area}"></td>
                 <td><img th:src="${city.image}"></td>
-                <td><a class="btn btn-info" th:href="@{/city/{id}(id=${city.cityId})}">View</a></td>
+                <td><a class="btn btn-info" th:href="@{/cities/{id}(id=${city.cityId})}">View</a></td>
+            </tr>
+        </table>
+        <table class="table table-striped">
+            <tr>
+                <th>Location Name</th>
+                <th>Location Description</th>
+                <th>Location Address</th>
+                <th>Location Image</th>
+            </tr>
+            <tr th:each="location : ${locations}">
+                <td th:text="${location.name}"></td>
+                <td th:text="${location.description}"></td>
+                <td th:text="${location.address}"></td>
+                <td><img th:src="${location.image}"></td>
+                <td><a class="btn btn-info" th:href="@{/locations/{id}(id=${location.locationId})}">View</a></td>
             </tr>
         </table>
     </div>

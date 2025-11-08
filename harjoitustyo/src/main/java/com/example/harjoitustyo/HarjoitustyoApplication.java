@@ -31,8 +31,8 @@ public class HarjoitustyoApplication {
 			Region region1 = new Region("Cmd: Test Region 1", "A region of test", "");
 			Region region2 = new Region("Cmd: Test Region 2");
 			City city1 = new City("Cmd: Test City 1", 210542, 80.55, "A city in need is a city indeed", region1);
-			City city2 = new City("Cmd: Test City 2", 55004, 65.55, "To live here is a true test of character",
-					region1);
+			String lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin luctus lorem et erat malesuada efficitur. Praesent convallis accumsan risus, at feugiat diam feugiat ullamcorper. Mauris varius ligula eros, nec mattis dui laoreet vel.";
+			City city2 = new City("Cmd: Test City 2", 55004, 65.55, lorem, region1);
 			Location location1 = new Location("Cmd: Test Location 1", city1);
 			Location location2 = new Location("Cmd: Test Location 2", "A lovely location indeed", city2);
 			AppUser appUser1 = new AppUser("admin", "asdf", "adminTest", "userTestLast", "ADMIN");
