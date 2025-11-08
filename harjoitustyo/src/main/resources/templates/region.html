@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Regions of Finland</title>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <p><a th:href="@{/}">Home</a></p>
+    <h1>Cities by region</h1>
+    <div>
+        <table class="table table-striped">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Image</th>
+            </tr>
+            <tr>
+                <td th:text="${region.name}"></td>
+                <td th:text="${region.description}"></td>
+                <td><img th:src="${region.image}"></td>
+            </tr>
+        </table>
+        <table class="table table-striped">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Population</th>
+                <th>Area</th>
+                <th>Image</th>
+            </tr>
+            <tr th:each="city : ${cities}">
+                <td th:text="${city.name}"></td>
+                <td th:text="${city.description}"></td>
+                <td th:text="${city.population}"></td>
+                <td th:text="${city.area}"></td>
+                <td><img th:src="${city.image}"></td>
+                <td><a class="btn btn-info" th:href="@{/cities/{id}(id=${city.cityId})}">View</a></td>
+            </tr>
+        </table>
+    </div>
+
+
+
+
+    <button onClick="testButton()">Test Button</button>
+
+    <div id="testResult"></div>
+
+    <script>
+        function testButton() {
+            const result = document.getElementById("testResult");
+            if (result.textContent == "It worked!") {
+                result.textContent = "";
+            } else
+                result.textContent = "It worked!";
+        }
+    </script>
+</body>

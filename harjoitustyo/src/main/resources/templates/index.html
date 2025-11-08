@@ -21,6 +21,7 @@
                 <td th:text="${region.name}"></td>
                 <td th:text="${region.description}"></td>
                 <td><img th:src="${region.image}"></td>
+                <td><a class="btn btn-info" th:href="@{/region/{id}(id=${region.regionId})}">Select</a></td>
             </tr>
         </table>
     </div>
