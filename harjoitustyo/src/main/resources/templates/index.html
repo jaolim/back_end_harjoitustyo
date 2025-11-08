@@ -3,12 +3,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Cities of Finland</title>
+    <title>Regions of Finland</title>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
-    <h1>Cities of Finland</h1>
+    <h1>Regions of Finland</h1>
+    <div>
+        <table class="table table-striped">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Image</th>
+            </tr>
+            <tr th:each="region : ${regions}">
+                <td th:text="${region.name}"></td>
+                <td th:text="${region.description}"></td>
+                <td><img th:src="${region.image}"></td>
+            </tr>
+        </table>
+    </div>
 
     <div>
         <h2>Test Region</h2>
@@ -72,7 +87,7 @@
         </tr>
     </div>
 
-        <div>
+    <div>
         <h2>Test Comment</h2>
         <p th:text="${testComment}"></p>
     </div>
