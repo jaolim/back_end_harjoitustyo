@@ -26,6 +26,7 @@ public class Region {
     @NotBlank(message = "Region name is required")
     private String name;
 
+    
     private String description, image;
 
     public Region() {

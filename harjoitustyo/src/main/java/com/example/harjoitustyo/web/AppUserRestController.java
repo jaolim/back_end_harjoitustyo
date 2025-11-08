@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.harjoitustyo.Exception.CustomBadRequestException;
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.AppUserRepository;
+
+import jakarta.validation.Valid;
+
 import com.example.harjoitustyo.domain.AppUser;
 
 @RestController
@@ -44,7 +47,7 @@ public class AppUserRestController {
     }
 
     @PostMapping("/appusers")
-    public AppUser postAppUser(@RequestBody AppUser appUser) {
+    public AppUser postAppUser(@Valid @RequestBody AppUser appUser) {
         if (appUser.getAppUserId() != null) {
             throw new CustomBadRequestException("Do not include appUserId");
         } else if (appUser.getUsername() == null || appUser.getUsername().isEmpty()) {

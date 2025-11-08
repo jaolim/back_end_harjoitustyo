@@ -30,6 +30,7 @@ public class AppUser {
 
     private String firstname;
 
+    @NotBlank()
     private String lastname;
 
     private String userRole;
