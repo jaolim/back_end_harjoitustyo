@@ -39,7 +39,7 @@ public class AppUserRestController {
 
     }
 
-    
+    @JsonView(Views.Elevated.class)
     @GetMapping(value = "/appusers/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<AppUser> getAppUserById(@PathVariable Long id) {
@@ -50,6 +50,7 @@ public class AppUserRestController {
         return appUser;
     }
 
+    @JsonView(Views.Elevated.class)
     @PostMapping("/appusers")
     public AppUser postAppUser(@Valid @RequestBody AppUser appUser) {
         if (appUser.getAppUserId() != null) {
@@ -64,6 +65,7 @@ public class AppUserRestController {
         return rRepository.save(appUser);
     }
 
+    @JsonView(Views.Elevated.class)
     @DeleteMapping("/appusers/{id}")
     public void deleteAppUser(@PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {
@@ -72,6 +74,7 @@ public class AppUserRestController {
         rRepository.deleteById(id);
     }
 
+    @JsonView(Views.Elevated.class)
     @PutMapping("/appusers/{id}")
     public Optional<AppUser> putAppUser(@RequestBody AppUser newAppUser, @PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {

@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.harjoitustyo.Views;
 import com.example.harjoitustyo.Exception.CustomBadRequestException;
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.RegionRepository;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -31,12 +33,14 @@ public class CityRestController {
         this.rRepository = rRepository;
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping(value = "/cities")
     public List<City> getAllCities() {
         return (List<City>) cRepository.findAll();
 
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping(value = "/cities/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<City> getCityById(@PathVariable Long id) {
@@ -47,6 +51,7 @@ public class CityRestController {
         return city;
     }
 
+    @JsonView(Views.Elevated.class)
     @PostMapping("/cities")
     public City postCity(@RequestBody City city) {
         if (city.getCityId() != null) {
@@ -59,6 +64,7 @@ public class CityRestController {
         return cRepository.save(city);
     }
 
+    @JsonView(Views.Elevated.class)
     @DeleteMapping("/cities/{id}")
     public void deleteCity(@PathVariable Long id) {
         if (!cRepository.findById(id).isPresent()) {
@@ -67,13 +73,15 @@ public class CityRestController {
         cRepository.deleteById(id);
     }
 
+    @JsonView(Views.Elevated.class)
     @PutMapping("/cities/{id}")
     public Optional<City> putCity(@RequestBody City newCity, @PathVariable Long id) {
         if (!cRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("City by id" + id + " does not exist");
         } else if (newCity.getName() == null || newCity.getName().isEmpty()) {
             throw new CustomBadRequestException("City name cannot be empty");
-        } else if (newCity.getRegion() == null || !rRepository.findById(newCity.getRegion().getRegionId()).isPresent()) {
+        } else if (newCity.getRegion() == null
+                || !rRepository.findById(newCity.getRegion().getRegionId()).isPresent()) {
             throw new CustomBadRequestException("Wrong or missing Region Id");
         }
 

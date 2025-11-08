@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.harjoitustyo.Views;
 import com.example.harjoitustyo.Exception.CustomBadRequestException;
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.Location;
 import com.example.harjoitustyo.domain.LocationRepository;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
 public class LocationRestController {
@@ -30,12 +32,14 @@ public class LocationRestController {
         this.cRepository = cRepository;
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping(value = "/locations")
     public List<Location> getAllCities() {
         return (List<Location>) lRepository.findAll();
 
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping(value = "/locations/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<Location> getLocationById(@PathVariable Long id) {
@@ -46,6 +50,7 @@ public class LocationRestController {
         return location;
     }
 
+    @JsonView(Views.Public.class)
     @PostMapping("/locations")
     public Location postLocation(@RequestBody Location location) {
         if (location.getLocationId() != null) {
@@ -58,6 +63,7 @@ public class LocationRestController {
         return lRepository.save(location);
     }
 
+    @JsonView(Views.Public.class)
     @DeleteMapping("/locations/{id}")
     public void deleteLocation(@PathVariable Long id) {
         if (!lRepository.findById(id).isPresent()) {
@@ -66,6 +72,7 @@ public class LocationRestController {
         lRepository.deleteById(id);
     }
 
+    @JsonView(Views.Public.class)
     @PutMapping("/locations/{id}")
     public Optional<Location> putLocation(@RequestBody Location newLocation, @PathVariable Long id) {
         if (!lRepository.findById(id).isPresent()) {

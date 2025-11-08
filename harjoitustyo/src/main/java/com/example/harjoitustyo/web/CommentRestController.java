@@ -44,6 +44,7 @@ public class CommentRestController {
 
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping(value = "/comments/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<Comment> getCommentById(@PathVariable Long id) {
@@ -54,6 +55,7 @@ public class CommentRestController {
         return comment;
     }
 
+    @JsonView(Views.Public.class)
     @PostMapping("/comments")
     public Comment postComment(@RequestBody Comment comment) {
         if (comment.getCommentId() != null) {
@@ -72,6 +74,7 @@ public class CommentRestController {
         return coRepository.save(comment);
     }
 
+    @JsonView(Views.Public.class)
     @DeleteMapping("/comments/{id}")
     public void deleteComment(@PathVariable Long id) {
         if (!coRepository.findById(id).isPresent()) {
@@ -80,6 +83,7 @@ public class CommentRestController {
         coRepository.deleteById(id);
     }
 
+    @JsonView(Views.Public.class)
     @PutMapping("/comments/{id}")
     public Optional<Comment> putComment(@RequestBody Comment newComment, @PathVariable Long id) {
         if (!coRepository.findById(id).isPresent()) {

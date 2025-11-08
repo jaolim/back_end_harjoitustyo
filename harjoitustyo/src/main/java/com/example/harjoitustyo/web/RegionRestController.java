@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.harjoitustyo.Views;
 import com.example.harjoitustyo.Exception.CustomBadRequestException;
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.Region;
 import com.example.harjoitustyo.domain.RegionRepository;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
@@ -27,12 +30,14 @@ public class RegionRestController {
         this.rRepository = rRepository;
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping(value = "/regions")
     public List<Region> getAllRegions() {
         return (List<Region>) rRepository.findAll();
 
     }
 
+    @JsonView(Views.Public.class)
     @GetMapping(value = "/regions/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<Region> getRegionById(@PathVariable Long id) {
@@ -43,6 +48,7 @@ public class RegionRestController {
         return region;
     }
 
+    @JsonView(Views.Elevated.class)
     @PostMapping("/regions")
     public Region postRegion(@RequestBody Region region) {
         if (region.getRegionId() != null) {
@@ -53,6 +59,7 @@ public class RegionRestController {
         return rRepository.save(region);
     }
 
+    @JsonView(Views.Elevated.class)
     @DeleteMapping("/regions/{id}")
     public void deleteRegion(@PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {
@@ -61,6 +68,7 @@ public class RegionRestController {
         rRepository.deleteById(id);
     }
 
+    @JsonView(Views.Elevated.class)
     @PutMapping("/regions/{id}")
     public Optional<Region> putRegion(@RequestBody Region newRegion, @PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {
