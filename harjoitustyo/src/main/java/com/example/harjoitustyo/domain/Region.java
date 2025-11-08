@@ -2,7 +2,9 @@ package com.example.harjoitustyo.domain;
 
 import java.util.List;
 
+import com.example.harjoitustyo.Views;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -15,18 +17,21 @@ import jakarta.validation.constraints.NotBlank;
 @Entity
 public class Region {
 
+    @JsonView(Views.Public.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long regionId;
 
+    @JsonView(Views.Public.class)
     @JsonIgnoreProperties("region")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval =  true, mappedBy = "region")
     private List<City> cities;
 
+    @JsonView(Views.Public.class)
     @NotBlank(message = "Region name is required")
     private String name;
 
-    
+    @JsonView(Views.Public.class)
     private String description, image;
 
     public Region() {

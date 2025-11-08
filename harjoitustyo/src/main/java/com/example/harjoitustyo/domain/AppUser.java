@@ -2,7 +2,9 @@ package com.example.harjoitustyo.domain;
 
 import java.util.List;
 
+import com.example.harjoitustyo.Views;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -15,24 +17,32 @@ import jakarta.validation.constraints.NotBlank;
 @Entity
 public class AppUser {
 
+    @JsonView(Views.Public.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long appUserId;
 
+    @JsonView(Views.Public.class)
     @JsonIgnoreProperties("appUser")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "appUser")
     private List<Comment> comments;
 
+    @JsonView(Views.Public.class)
     @NotBlank(message = "Username cannot be empty")
     private String username;
 
+    @JsonView(Views.Internal.class)
     private String passwordHash;
 
+    @JsonView(Views.Elevated.class)
     private String firstname;
 
+    @JsonView(Views.Elevated.class)
     @NotBlank()
     private String lastname;
 
+    @JsonView(Views.Elevated.class)
+    @NotBlank
     private String userRole;
 
     public AppUser() {

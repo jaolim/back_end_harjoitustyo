@@ -1,6 +1,8 @@
 package com.example.harjoitustyo.domain;
 
+import com.example.harjoitustyo.Views;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,23 +15,28 @@ import jakarta.validation.constraints.NotBlank;
 @Entity
 public class Comment {
 
+    @JsonView(Views.Public.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
+    @JsonView(Views.Public.class)
     @ManyToOne
     @JoinColumn(name = "appUserId")
     @JsonIgnoreProperties("comments")
     private AppUser appUser;
 
+    @JsonView(Views.Public.class)
     @ManyToOne
     @JoinColumn(name = "locationId")
     @JsonIgnoreProperties("comments")
     private Location location;
 
+    @JsonView(Views.Public.class)
     @NotBlank(message = "Comment headline is required")
     private String headline;
 
+    @JsonView(Views.Public.class)
     @NotBlank(message = "Commend body is required")
     private String body;
 

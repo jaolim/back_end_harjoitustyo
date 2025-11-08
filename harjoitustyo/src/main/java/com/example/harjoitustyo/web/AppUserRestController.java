@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.harjoitustyo.Views;
 import com.example.harjoitustyo.Exception.CustomBadRequestException;
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.AppUserRepository;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.validation.Valid;
 
@@ -30,12 +32,14 @@ public class AppUserRestController {
         this.rRepository = rRepository;
     }
 
+    @JsonView(Views.Elevated.class)
     @GetMapping(value = "/appusers")
     public List<AppUser> getAllAppUsers() {
         return (List<AppUser>) rRepository.findAll();
 
     }
 
+    
     @GetMapping(value = "/appusers/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<AppUser> getAppUserById(@PathVariable Long id) {
