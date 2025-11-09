@@ -9,8 +9,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
-<body>
-    <p><a th:href="@{/}">Home</a></p>
+<body body style="margin:5px">
+    <a th:href="@{/}">Home</a>
+    <div>
+        <i sec:authorize="isAuthenticated()">User: <span sec:authentication="name"></span></i>
+        <a sec:authorize="!isAuthenticated()" class="btn btn-primary" th:href="@{/login}">Login</a>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+            <input type="submit" value="Logout" class="btn btn-sm btn-danger" />
+        </form>
+    </div>
     <h1>Cities by region</h1>
     <div>
         <table class="table table-striped">

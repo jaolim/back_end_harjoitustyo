@@ -1,5 +1,6 @@
 package com.example.harjoitustyo.web;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ public class RegionController {
         this.cRepository = cRepository;
     }
 
+    //@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @GetMapping(value = { "/region/{id}" })
     public String getRegion(@PathVariable("id") Long regionId, Model model) {
         Region region = rRepository.findById(regionId)

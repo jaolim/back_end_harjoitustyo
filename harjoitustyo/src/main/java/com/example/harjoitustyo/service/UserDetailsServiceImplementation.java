@@ -16,8 +16,8 @@ public class UserDetailsServiceImplementation implements UserDetailsService  {
 	
 	AppUserRepository auRepository;
 	
-	public UserDetailsServiceImplementation(AppUserRepository appUserRepository) {
-		this.auRepository = appUserRepository; 
+	public UserDetailsServiceImplementation(AppUserRepository auRepository) {
+		this.auRepository = auRepository; 
 	}
 
     @Override

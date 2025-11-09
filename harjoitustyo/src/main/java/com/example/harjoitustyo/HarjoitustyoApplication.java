@@ -4,6 +4,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.harjoitustyo.domain.AppUser;
 import com.example.harjoitustyo.domain.AppUserRepository;
@@ -35,8 +37,9 @@ public class HarjoitustyoApplication {
 			City city2 = new City("Cmd: Test City 2", 55004, 65.55, lorem, region1);
 			Location location1 = new Location("Cmd: Test Location 1", city1);
 			Location location2 = new Location("Cmd: Test Location 2", "A lovely location indeed", city2);
-			AppUser appUser1 = new AppUser("admin", "asdf", "adminTest", "userTestLast", "ADMIN");
-			AppUser appUser2 = new AppUser("user", "asdf", "userTest", "userTestLast", "USER");
+			PasswordEncoder encoder = new BCryptPasswordEncoder();
+			AppUser appUser1 = new AppUser("admin", encoder.encode("admin"), "adminTest", "userTestLast", "ADMIN");
+			AppUser appUser2 = new AppUser("user", encoder.encode("user"), "userTest", "userTestLast", "USER");
 			Comment comment1 = new Comment("Test headline", "A testful body of text", location1, appUser1);
 			Comment comment2 = new Comment("Test headline", "A testful body of text", location2, appUser2);
 			rRepository.save(region1);
