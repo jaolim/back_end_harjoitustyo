@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import com.example.harjoitustyo.domain.Location;
 import com.example.harjoitustyo.domain.LocationRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 
+@CrossOrigin(originPatterns = "*")
 @RestController
 public class LocationRestController {
 
