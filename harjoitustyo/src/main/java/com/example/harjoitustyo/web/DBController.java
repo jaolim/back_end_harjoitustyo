@@ -1,5 +1,6 @@
 package com.example.harjoitustyo.web;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,8 @@ public class DBController {
         this.auRepository = auRepository;
     }
 
-    @GetMapping(value = "/db/reset")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping(value = "/db/delete")
     public String deleteDB(Model model, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         coRepository.deleteAll();
@@ -48,9 +50,15 @@ public class DBController {
         cRepository.deleteAll();
         rRepository.deleteAll();
         auRepository.deleteAll();
+
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        AppUser appUser1 = new AppUser("admin", encoder.encode("admin"), "adminTest", "userTestLast", "ADMIN");
+        auRepository.save(appUser1);
+
         return "redirect:" + referer;
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/db/repopulate")
     public String repopulateDB(Model model, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
@@ -84,7 +92,7 @@ public class DBController {
         auRepository.save(appUser2);
         coRepository.save(comment1);
         coRepository.save(comment2);
-        
+
         return "redirect:" + referer;
     }
 

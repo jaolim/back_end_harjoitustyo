@@ -20,8 +20,8 @@
     </div>
     <h1>Regions of Finland</h1>
     <div>
-        <a class="btn btn-danger" th:href="@{/db/reset}">Clear Database</a>
-        <a class="btn btn-danger" th:href="@{/db/repopulate}">Repopulate Database</a>
+        <a sec:authorize="hasAuthority('ADMIN')" class="btn btn-danger" th:href="@{/db/delete}">Clear Database</a>
+        <a sec:authorize="hasAuthority('ADMIN')" class="btn btn-danger" th:href="@{/db/repopulate}">Repopulate Database</a>
     </div>
     <div>
         <table class="table table-striped">
@@ -52,7 +52,6 @@
                 <td th:text="${region}"></td>
                 <img th:src="${region.getImage()}">
             </p>
-
         </tr>
     </div>
 
