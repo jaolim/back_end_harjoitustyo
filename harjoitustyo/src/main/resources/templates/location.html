@@ -18,7 +18,7 @@
             <input type="submit" value="Logout" class="btn btn-sm btn-danger" />
         </form>
     </div>
-    <h1>Locations by city</h1>
+    <h1>Comments by Location</h1>
     <div>
         <table class="table table-striped">
             <tr>
@@ -73,7 +73,9 @@
                 <td th:text="${comment.headline}"></td>
                 <td th:text="${comment.body}"></td>
                 <td th:text="${comment.getAppUser().getUsername()}"></td>
-                <td><a class="btn btn-info" th:href="@{/comments/{id}(id=${comment.commentId})}">View</a></td>
+                <td><a class="btn btn-info" th:href="@{/comments/{id}(id=${comment.commentId})}">Select</a></td>
+                <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger"
+                        th:href="@{/comment/delete/{id}(id=${comment.commentId})}">Delete</a></td>
             </tr>
         </table>
     </div>

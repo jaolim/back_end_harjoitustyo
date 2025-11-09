@@ -10,7 +10,12 @@ import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.Location;
 import com.example.harjoitustyo.domain.LocationRepository;
 import com.example.harjoitustyo.domain.Region;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.example.harjoitustyo.domain.CommentRepository;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class LocationController {
@@ -37,5 +42,14 @@ public class LocationController {
 
     }
 
+    @GetMapping(value = "/location/delete/{id}")
+    public String deleteLocation(@PathVariable("id") Long locationId, Model model, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        lRepository.deleteById(locationId);
+        return "redirect:" + referer;
+
+    }
+
+    
 }
 

@@ -46,13 +46,12 @@
                 <td th:text="${city.population}"></td>
                 <td th:text="${city.area}"></td>
                 <td><img th:src="${city.image}"></td>
-                <td><a class="btn btn-info" th:href="@{/city/{id}(id=${city.cityId})}">View</a></td>
+                <td><a class="btn btn-info" th:href="@{/city/{id}(id=${city.cityId})}">Select</a></td>
+                <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger"
+                        th:href="@{/city/delete/{id}(id=${city.cityId})}">Delete</a></td>
             </tr>
         </table>
     </div>
-
-
-
 
     <button onClick="testButton()">Test Button</button>
 

@@ -60,13 +60,12 @@
                 <td th:text="${location.description}"></td>
                 <td th:text="${location.address}"></td>
                 <td><img th:src="${location.image}"></td>
-                <td><a class="btn btn-info" th:href="@{/location/{id}(id=${location.locationId})}">View</a></td>
+                <td><a class="btn btn-info" th:href="@{/location/{id}(id=${location.locationId})}">Select</a></td>
+                <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger"
+                        th:href="@{/location/delete/{id}(id=${location.locationId})}">Delete</a></td>
             </tr>
         </table>
     </div>
-
-
-
 
     <button onClick="testButton()">Test Button</button>
 

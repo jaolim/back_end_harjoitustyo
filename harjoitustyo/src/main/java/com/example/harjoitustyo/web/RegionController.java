@@ -11,6 +11,8 @@ import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.Region;
 import com.example.harjoitustyo.domain.RegionRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 public class RegionController {
 
@@ -22,7 +24,7 @@ public class RegionController {
         this.cRepository = cRepository;
     }
 
-    //@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    // @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @GetMapping(value = { "/region/{id}" })
     public String getRegion(@PathVariable("id") Long regionId, Model model) {
         Region region = rRepository.findById(regionId)
@@ -31,6 +33,13 @@ public class RegionController {
         model.addAttribute("cities", cRepository.findByRegion(region));
         return "region";
 
+    }
+
+    @GetMapping(value = "/region/delete/{id}")
+    public String deleteRegion(@PathVariable("id") Long regionId, Model model, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        rRepository.deleteById(regionId);
+        return "redirect:" + referer;
     }
 
 }

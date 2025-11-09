@@ -11,6 +11,8 @@ import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.LocationRepository;
 import com.example.harjoitustyo.domain.Region;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 public class CityController {
 
@@ -31,7 +33,13 @@ public class CityController {
         model.addAttribute("region", region);
         model.addAttribute("locations", lRepository.findByCity(city));
         return "city";
+    }
 
+    @GetMapping(value = "/city/delete/{id}")
+    public String deleteCity(@PathVariable("id") Long cityId, Model model, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        cRepository.deleteById(cityId);
+        return "redirect:" + referer;
     }
 
 }
