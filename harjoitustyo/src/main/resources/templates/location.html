@@ -67,16 +67,19 @@
                 <th>Comment Headline</th>
                 <th>Comment Body</th>
                 <th>By User</th>
-                <th>Location Image</th>
             </tr>
             <tr th:each="comment : ${comments}">
                 <td th:text="${comment.headline}"></td>
                 <td th:text="${comment.body}"></td>
                 <td th:text="${comment.getAppUser().getUsername()}"></td>
-                <td><a class="btn btn-info" th:href="@{/comments/{id}(id=${comment.commentId})}">Select</a></td>
-                <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger"
-                        th:href="@{/comment/delete/{id}(id=${comment.commentId})}">Delete</a></td>
+                <td><a th:if="${comment.appUser.username == #authentication.name}" class="btn btn-info"
+                        th:href="@{/comments/edit/{id}(id=${comment.commentId})}">Edit</a></td>
+                <td><a th:if="${comment.appUser.username == #authentication.name or #authorization.expression('hasAuthority(''ADMIN'')')}"
+                        sec:authorize="isAuthenticated()" class="btn btn-danger"
+                        th:href="@{/comment/delete/{id}(id=${comment.commentId})}">Delete</a>
+                </td>
             </tr>
         </table>
+        <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></div>
     </div>
 </body>

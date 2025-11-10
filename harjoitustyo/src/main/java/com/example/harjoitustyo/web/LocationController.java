@@ -1,5 +1,6 @@
 package com.example.harjoitustyo.web;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,7 @@ public class LocationController {
 
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/location/delete/{id}")
     public String deleteLocation(@PathVariable("id") Long locationId, Model model, HttpServletRequest request) {
         String referer = request.getHeader("Referer");

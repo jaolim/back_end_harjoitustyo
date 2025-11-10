@@ -79,9 +79,11 @@ public class DBController {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         AppUser appUser1 = new AppUser("admin", encoder.encode("admin"), "adminTest", "userTestLast", "ADMIN");
         AppUser appUser2 = new AppUser("user", encoder.encode("user"), "userTest", "userTestLast", "USER");
+        AppUser appUser3 = new AppUser("erkki", encoder.encode("erkki"), "Erkki", "Esimerkki", "USER");
         Comment comment1 = new Comment("Test headline", "A testful body of text", location1, appUser1);
         Comment comment2 = new Comment("Test headline", "A testful body of text", location2, appUser2);
-
+        Comment comment3 = new Comment("Test headline", "A testful body of text", location1, appUser3);
+        Comment comment4 = new Comment("Test headline", "A testful body of text", location1, appUser2);
         rRepository.save(region1);
         rRepository.save(region2);
         cRepository.save(city1);
@@ -90,8 +92,11 @@ public class DBController {
         lRepository.save(location2);
         auRepository.save(appUser1);
         auRepository.save(appUser2);
+        auRepository.save(appUser3);
         coRepository.save(comment1);
         coRepository.save(comment2);
+        coRepository.save(comment3);
+        coRepository.save(comment4);
 
         return "redirect:" + referer;
     }

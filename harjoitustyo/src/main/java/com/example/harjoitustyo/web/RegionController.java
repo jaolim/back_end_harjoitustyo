@@ -35,6 +35,7 @@ public class RegionController {
 
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/region/delete/{id}")
     public String deleteRegion(@PathVariable("id") Long regionId, Model model, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
