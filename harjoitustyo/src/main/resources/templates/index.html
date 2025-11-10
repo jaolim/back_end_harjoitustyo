@@ -21,14 +21,17 @@
     <h1>Regions of Finland</h1>
     <div>
         <a sec:authorize="hasAuthority('ADMIN')" class="btn btn-danger" th:href="@{/db/delete}">Clear Database</a>
-        <a sec:authorize="hasAuthority('ADMIN')" class="btn btn-danger" th:href="@{/db/repopulate}">Repopulate Database</a>
+        <a sec:authorize="hasAuthority('ADMIN')" class="btn btn-danger" th:href="@{/db/repopulate}">Repopulate
+            Database</a>
     </div>
     <div>
         <table class="table table-striped">
             <tr>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Image</th>
+                <th>Region Image</th>
+                <th sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/region/add}">Add New
+                        Region</a></th>
             </tr>
             <tr th:each="region : ${regions}">
                 <td th:text="${region.name}"></td>

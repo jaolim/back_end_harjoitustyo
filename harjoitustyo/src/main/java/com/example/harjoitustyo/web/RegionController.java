@@ -12,6 +12,10 @@ import com.example.harjoitustyo.domain.Region;
 import com.example.harjoitustyo.domain.RegionRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
 public class RegionController {
@@ -41,6 +45,26 @@ public class RegionController {
         String referer = request.getHeader("Referer");
         rRepository.deleteById(regionId);
         return "redirect:" + referer;
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping(value = { "/region/add" })
+    public String addRegion(Model model) {
+        model.addAttribute("region", new Region());
+        return "regionAdd";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/region/save")
+    public String saveRegion(Region region, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        String referer = request.getHeader("Referer");
+        if(rRepository.existsByName(region.getName())){
+            redirectAttributes.addFlashAttribute("errorMessage", "Region by the name of " + region.getName() + " already exists.");
+            return "redirect:" + referer;
+
+        }
+        rRepository.save(region);
+        return "redirect:..";
     }
 
 }

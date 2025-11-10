@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +28,7 @@ public class Region {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval =  true, mappedBy = "region")
     private List<City> cities;
 
+    @Column(nullable = false, unique = true)
     @JsonView(Views.Public.class)
     @NotBlank(message = "Region name is required")
     private String name;
