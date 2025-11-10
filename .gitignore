@@ -4,3 +4,6 @@
 ### backups ###
 *.bkp
 *.dtmp
+
+### excel files ###
+*xlsx

@@ -29,14 +29,12 @@
             <tr>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Region Image</th>
                 <th sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/region/add}">Add New
                         Region</a></th>
             </tr>
             <tr th:each="region : ${regions}">
                 <td th:text="${region.name}"></td>
                 <td th:text="${region.description}"></td>
-                <td><img th:src="${region.image}"></td>
                 <td><a class="btn btn-info" th:href="@{/region/{id}(id=${region.regionId})}">Select</a></td>
                 <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/region/edit/{id}(id=${region.regionId})}">Edit</a></td>
                 <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger"
@@ -54,7 +52,7 @@
         <tr th:each="region : ${regions}">
             <p>
                 <td th:text="${region}"></td>
-                <img th:src="${region.getImage()}">
+                <td th:text="${region.getImage()}"></td>
             </p>
         </tr>
     </div>
@@ -69,7 +67,7 @@
         <tr th:each="city : ${cities}">
             <p>
                 <td th:text="${city}"></td>
-                <img th:src="${city.getImage()}">
+                <td th:text="${city.getImage()}"></td>
             </p>
 
         </tr>
@@ -85,7 +83,7 @@
         <tr th:each="location : ${locations}">
             <p>
                 <td th:text="${location}"></td>
-                <img th:src="${location.getImage()}">
+                <td th:text="${location.getImage()}"></td>
             </p>
 
         </tr>

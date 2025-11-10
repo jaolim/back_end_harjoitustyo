@@ -59,6 +59,11 @@ public class RegionController {
     @PostMapping("/region/save")
     public String saveRegion(Region region, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         String referer = request.getHeader("Referer");
+        if (region.getName().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Region name is required.");
+            return "redirect:" + referer;
+        }
         if (rRepository.existsByName(region.getName())) {
             if (region.getRegionId() != null) {
                 Region isSame = rRepository.findByName(region.getName());

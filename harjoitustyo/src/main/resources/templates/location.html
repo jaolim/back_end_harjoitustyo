@@ -24,14 +24,14 @@
             <tr>
                 <th>Region Name</th>
                 <th>Region Description</th>
-                <th>Region Image</th>
+                <th>Region Coat of Arms</th>
                 <th sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/region/add}">Add New
                         Region</a></th>
             </tr>
             <tr>
                 <td th:text="${region.name}"></td>
                 <td th:text="${region.description}"></td>
-                <td><img th:src="${region.image}"></td>
+                <td><img style="height:50px" th:src="${region.image}"></td>
             </tr>
         </table>
         <table class="table table-striped">

@@ -33,6 +33,13 @@ public class HarjoitustyoApplication {
 			if (!auRepository.existsByUsername("admin")) {
 				Region region1 = new Region("Cmd: Test Region 1", "A region of test", "");
 				Region region2 = new Region("Cmd: Test Region 2");
+				Region rPirkanmaa = new Region("Pirkanmaa",
+						"Vibrant region centered on Tampere, mixing industry, culture, and lake scenery.",
+						"https://upload.wikimedia.org/wikipedia/commons/c/c3/Pirkanmaa.vaakuna.svg");
+
+				City cAkaa = new City("Akaa", 16402, 293.29,
+						"Small Pirkanmaa town with lakes, industry, and peaceful rural surroundings.", rPirkanmaa,
+						"https://upload.wikimedia.org/wikipedia/commons/5/52/Akaa.vaakuna.svg");
 				City city1 = new City("Cmd: Test City 1", 210542, 80.55, "A city in need is a city indeed", region1);
 				String lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin luctus lorem et erat malesuada efficitur. Praesent convallis accumsan risus, at feugiat diam feugiat ullamcorper. Mauris varius ligula eros, nec mattis dui laoreet vel.";
 				City city2 = new City("Cmd: Test City 2", 55004, 65.55, lorem, region1);
@@ -46,8 +53,10 @@ public class HarjoitustyoApplication {
 				Comment comment2 = new Comment("Test headline", "A testful body of text", location2, appUser2);
 				Comment comment3 = new Comment("Test headline", "A testful body of text", location1, appUser3);
 				Comment comment4 = new Comment("Test headline", "A testful body of text", location1, appUser2);
+				rRepository.save(rPirkanmaa);
 				rRepository.save(region1);
 				rRepository.save(region2);
+				cRepository.save(cAkaa);
 				cRepository.save(city1);
 				cRepository.save(city2);
 				lRepository.save(location1);
