@@ -38,6 +38,7 @@
                 <td th:text="${region.description}"></td>
                 <td><img th:src="${region.image}"></td>
                 <td><a class="btn btn-info" th:href="@{/region/{id}(id=${region.regionId})}">Select</a></td>
+                <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/region/edit/{id}(id=${region.regionId})}">Edit</a></td>
                 <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger"
                         th:href="@{/region/delete/{id}(id=${region.regionId})}">Delete</a></td>
             </tr>
