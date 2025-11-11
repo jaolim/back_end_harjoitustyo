@@ -88,7 +88,8 @@ public class CommentRestController {
     public void deleteComment(@PathVariable Long id, Authentication authentication) {
         Optional<Comment> comment = coRepository.findById(id);
         String currentUser = authentication.getName();
-        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
         if (!comment.isPresent()) {
             throw new CustomNotFoundException("Comment by the id " + id + " does not exist");
         } else if (!comment.get().getAppUser().getUsername().equals(currentUser) && !isAdmin) {
@@ -100,14 +101,15 @@ public class CommentRestController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @JsonView(Views.Public.class)
     @PutMapping("/comments/{id}")
-    public Optional<Comment> putComment(@RequestBody Comment newComment, @PathVariable Long id, Authentication authentication) {
+    public Optional<Comment> putComment(@RequestBody Comment newComment, @PathVariable Long id,
+            Authentication authentication) {
         Optional<Comment> comment = coRepository.findById(id);
         String currentUser = authentication.getName();
         if (!coRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("Comment by id" + id + " does not exist");
         } else if (!comment.get().getAppUser().getUsername().equals(currentUser)) {
             throw new CustomForbiddenException("You do not have permissions to edit comment by the id of " + id);
-        }else if (newComment.getHeadline() == null || newComment.getHeadline().isEmpty()) {
+        } else if (newComment.getHeadline() == null || newComment.getHeadline().isEmpty()) {
             throw new CustomBadRequestException("Comment headline cannot be empty");
         } else if (newComment.getBody() == null || newComment.getBody().isEmpty()) {
             throw new CustomBadRequestException("Comment body cannot be empty");
@@ -120,12 +122,12 @@ public class CommentRestController {
         }
 
         return comment.map(com -> {
-                    com.setHeadline(newComment.getHeadline());
-                    com.setBody(newComment.getBody());
-                    com.setAppUser(newComment.getAppUser());
-                    com.setLocation(newComment.getLocation());
-                    return coRepository.save(com);
-                });
+            com.setHeadline(newComment.getHeadline());
+            com.setBody(newComment.getBody());
+            com.setAppUser(newComment.getAppUser());
+            com.setLocation(newComment.getLocation());
+            return coRepository.save(com);
+        });
 
     }
 }
