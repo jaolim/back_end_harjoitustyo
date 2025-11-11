@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -55,7 +56,8 @@ public class WebSecurityConfig {
                         .defaultSuccessUrl("/", true)
                         .permitAll())
                 .logout(logout -> logout
-                        .permitAll());
+                        .permitAll())
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
