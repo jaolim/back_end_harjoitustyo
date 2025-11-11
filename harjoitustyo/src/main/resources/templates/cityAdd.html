@@ -22,7 +22,7 @@
     <h1>Add City</h1>
 
     <div>
-        <form th:object="${city}" th:action="@{save}" actin="#" method="post">
+        <form th:object="${city}" th:action="@{save}" method="post">
             <p>
                 <input type="text" id="name" th:field="*{name}" />
                 <label for="CityName">City Name</label>

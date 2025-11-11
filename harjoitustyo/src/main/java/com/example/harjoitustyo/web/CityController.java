@@ -42,6 +42,22 @@ public class CityController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/city/edit/{id}")
+    public String editEdit(@PathVariable("id") Long cityId, Model model, HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
+        String referer = request.getHeader("Referer");
+        Optional<City> city = cRepository.findById(cityId);
+        if (!city.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "City by the ID of " + cityId + " does not exist.");
+            return "redirect:" + referer;
+        }
+        model.addAttribute("regions", rRepository.findAll());
+        model.addAttribute("city", city);
+        return "cityEdit";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/city/save")
     public String saveCity(City city, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         String referer = request.getHeader("Referer");
@@ -66,7 +82,7 @@ public class CityController {
             }
         }
         cRepository.save(city);
-        return "redirect:..";
+        return "redirect:../region/" + city.getRegion().getRegionId();
     }
 
     @GetMapping(value = { "/city/{id}" })

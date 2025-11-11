@@ -4,7 +4,7 @@
     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <head>
-    <title>Add Region</title>
+    <title>Add City</title>
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
@@ -19,25 +19,39 @@
         </form>
     </div>
 
-    <h1>Add Region</h1>
+    <h1>Add City</h1>
 
     <div>
-        <form th:object="${region}" th:action="@{../save}" method="post">
+        <form th:object="${city}" th:action="@{../save}" method="post">
             <p>
                 <label for="RegionId"></label>
-                <input type="hidden" id="id" th:field="*{regionId}" readyonly="readyonly"/>
+                <input type="hidden" id="id" th:field="*{cityId}" readyonly="readyonly" />
             </p>
             <p>
                 <input type="text" id="name" th:field="*{name}" />
-                <label for="RegionName">Region Name</label>
+                <label for="CityName">City Name</label>
+            </p>
+            <p>
+                <input type="text" id="population" th:field="*{population}" />
+                <label for="CityPopulation">City Population</label>
+            </p>
+            <p>
+                <input type="text" id="area" th:field="*{area}" />
+                <label for="CityArea">City Area</label>
             </p>
             <p>
                 <input type="text" id="description" th:field="*{description}" />
-                <label for="RegionDescription">Region Description</label>
+                <label for="CityDescription">City Description</label>
             </p>
             <p>
                 <input type="text" id="image" th:field="*{image}" />
-                <label for="RegionImage">Image Source Url</label>
+                <label for="CityImage">Image Source Url</label>
+            </p>
+            <p>
+                <select id="regions" th:field="*{region}" class="form-control">
+                    <option th:each="region: ${regions}" th:value="${region.regionId}" th:text="${region.name}">
+                    </option>
+                    <label for="regions">Regions</label>
             </p>
             <input class="btn btn-success" type="submit" value="Save"></input>
         </form>

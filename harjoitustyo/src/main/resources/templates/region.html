@@ -41,7 +41,8 @@
                 <th>City Description</th>
                 <th>City Population</th>
                 <th>City Area</th>
-                <th sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/city/add}">Add City</a></th>
+                <th sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/city/add}">Add City</a>
+                </th>
             </tr>
             <tr th:each="city : ${cities}">
                 <td th:text="${city.name}"></td>
@@ -49,6 +50,8 @@
                 <td th:text="${city.population}"></td>
                 <td th:text="${city.area}"></td>
                 <td><a class="btn btn-info" th:href="@{/city/{id}(id=${city.cityId})}">Select</a></td>
+                <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info"
+                        th:href="@{/city/edit/{id}(id=${city.cityId})}">Edit</a></td>
                 <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger"
                         th:href="@{/city/delete/{id}(id=${city.cityId})}">Delete</a></td>
             </tr>
