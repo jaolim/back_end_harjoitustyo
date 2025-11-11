@@ -4,8 +4,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.harjoitustyo.domain.AppUser;
 import com.example.harjoitustyo.domain.AppUserRepository;
@@ -45,10 +43,15 @@ public class HarjoitustyoApplication {
 				City city2 = new City("Cmd: Test City 2", 55004, 65.55, lorem, region1);
 				Location location1 = new Location("Cmd: Test Location 1", city1);
 				Location location2 = new Location("Cmd: Test Location 2", "A lovely location indeed", city2);
-				PasswordEncoder encoder = new BCryptPasswordEncoder();
-				AppUser appUser1 = new AppUser("admin", encoder.encode("admin"), "adminTest", "userTestLast", "ADMIN");
-				AppUser appUser2 = new AppUser("user", encoder.encode("user"), "userTest", "userTestLast", "USER");
-				AppUser appUser3 = new AppUser("erkki", encoder.encode("erkki"), "Erkki", "Esimerkki", "USER");
+				AppUser appUser1 = new AppUser("admin", "$2a$10$zNXa3MgyyUslVl.jL8950eGswQKEBKFVkSXlvghOPigjUcKXsasbK", "ADMIN",
+						"adminTest", "userTestLast");
+				AppUser appUser2 = new AppUser("user", "$2a$10$YxQApzp3QttDxZO2Mx1BbeyQHH9YJaLDMciTk0zI/yiULbTJVZq/C", "USER",
+						"userTest", "userTestLast");
+				AppUser appUser3 = new AppUser("erkki", "$2a$10$DS/qbwxu.pxDNcvaFC4IS.00fnAovXseaUnqu/ccE5DBBoLpWUile", "USER",
+						"Erkki", "Esimerkki");
+				AppUser appUser4 = new AppUser("pekka", "$2a$10$a1O0jjIa9HUB7Zr1rMkmY.qU0OuPj9XRlkCEoiS6CtGYcDWi3f2rK", "USER",
+						"Pekka");
+				AppUser appUser5 = new AppUser("maintenance", "$2a$10$WUfrNQVubEAoZdPE/D8Qkue2ApFz4DzXlR3AUop/RYYG9u1Xp1dfy", "ADMIN");
 				Comment comment1 = new Comment("Test headline", "A testful body of text", location1, appUser1);
 				Comment comment2 = new Comment("Test headline", "A testful body of text", location2, appUser2);
 				Comment comment3 = new Comment("Test headline", "A testful body of text", location1, appUser3);
@@ -64,6 +67,8 @@ public class HarjoitustyoApplication {
 				auRepository.save(appUser1);
 				auRepository.save(appUser2);
 				auRepository.save(appUser3);
+				auRepository.save(appUser4);
+				auRepository.save(appUser5);
 				coRepository.save(comment1);
 				coRepository.save(comment2);
 				coRepository.save(comment3);

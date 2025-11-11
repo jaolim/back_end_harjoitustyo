@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,7 @@ public class AppUserRestController {
         this.rRepository = rRepository;
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @GetMapping(value = "/appusers")
     public List<AppUser> getAllAppUsers() {
@@ -41,6 +43,7 @@ public class AppUserRestController {
 
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @GetMapping(value = "/appusers/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -52,7 +55,8 @@ public class AppUserRestController {
         return appUser;
     }
 
-    @JsonView(Views.Elevated.class)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @JsonView(Views.Internal.class)
     @PostMapping("/appusers")
     public AppUser postAppUser(@Valid @RequestBody AppUser appUser) {
         if (appUser.getAppUserId() != null) {
@@ -67,6 +71,7 @@ public class AppUserRestController {
         return rRepository.save(appUser);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @DeleteMapping("/appusers/{id}")
     public void deleteAppUser(@PathVariable Long id) {
@@ -76,7 +81,8 @@ public class AppUserRestController {
         rRepository.deleteById(id);
     }
 
-    @JsonView(Views.Elevated.class)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @JsonView(Views.Internal.class)
     @PutMapping("/appusers/{id}")
     public Optional<AppUser> putAppUser(@RequestBody AppUser newAppUser, @PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {

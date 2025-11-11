@@ -36,6 +36,7 @@ public class CityController {
         return "city";
     }
 
+    
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/city/delete/{id}")
     public String deleteCity(@PathVariable("id") Long cityId, Model model, HttpServletRequest request) {

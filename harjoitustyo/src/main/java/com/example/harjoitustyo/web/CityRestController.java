@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,7 @@ public class CityRestController {
         this.rRepository = rRepository;
     }
 
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @JsonView(Views.Public.class)
     @GetMapping(value = "/cities")
     public List<City> getAllCities() {
@@ -42,6 +44,7 @@ public class CityRestController {
 
     }
 
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @JsonView(Views.Public.class)
     @GetMapping(value = "/cities/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -53,6 +56,7 @@ public class CityRestController {
         return city;
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @PostMapping("/cities")
     public City postCity(@RequestBody City city) {
@@ -66,6 +70,7 @@ public class CityRestController {
         return cRepository.save(city);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @DeleteMapping("/cities/{id}")
     public void deleteCity(@PathVariable Long id) {
@@ -75,6 +80,7 @@ public class CityRestController {
         cRepository.deleteById(id);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @PutMapping("/cities/{id}")
     public Optional<City> putCity(@RequestBody City newCity, @PathVariable Long id) {

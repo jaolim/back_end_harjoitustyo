@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
 
 import com.example.harjoitustyo.Views;
 import com.example.harjoitustyo.Exception.CustomBadRequestException;
+import com.example.harjoitustyo.Exception.CustomForbiddenException;
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.Comment;
 import com.example.harjoitustyo.domain.CommentRepository;
@@ -39,6 +42,7 @@ public class CommentRestController {
         this.lRepository = lRepository;
     }
 
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @JsonView(Views.Public.class)
     @GetMapping(value = "/comments")
     public List<Comment> getAllCities() {
@@ -46,6 +50,7 @@ public class CommentRestController {
 
     }
 
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @JsonView(Views.Public.class)
     @GetMapping(value = "/comments/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -57,6 +62,7 @@ public class CommentRestController {
         return comment;
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @JsonView(Views.Public.class)
     @PostMapping("/comments")
     public Comment postComment(@RequestBody Comment comment) {
@@ -76,21 +82,32 @@ public class CommentRestController {
         return coRepository.save(comment);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @JsonView(Views.Public.class)
     @DeleteMapping("/comments/{id}")
-    public void deleteComment(@PathVariable Long id) {
-        if (!coRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("Comment by id " + id + " does not exist");
+    public void deleteComment(@PathVariable Long id, Authentication authentication) {
+        Optional<Comment> comment = coRepository.findById(id);
+        String currentUser = authentication.getName();
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+        if (!comment.isPresent()) {
+            throw new CustomNotFoundException("Comment by the id " + id + " does not exist");
+        } else if (!comment.get().getAppUser().getUsername().equals(currentUser) && !isAdmin) {
+            throw new CustomForbiddenException("You do not have permissions to delete comment by the id of " + id);
         }
         coRepository.deleteById(id);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @JsonView(Views.Public.class)
     @PutMapping("/comments/{id}")
-    public Optional<Comment> putComment(@RequestBody Comment newComment, @PathVariable Long id) {
+    public Optional<Comment> putComment(@RequestBody Comment newComment, @PathVariable Long id, Authentication authentication) {
+        Optional<Comment> comment = coRepository.findById(id);
+        String currentUser = authentication.getName();
         if (!coRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("Comment by id" + id + " does not exist");
-        } else if (newComment.getHeadline() == null || newComment.getHeadline().isEmpty()) {
+        } else if (!comment.get().getAppUser().getUsername().equals(currentUser)) {
+            throw new CustomForbiddenException("You do not have permissions to edit comment by the id of " + id);
+        }else if (newComment.getHeadline() == null || newComment.getHeadline().isEmpty()) {
             throw new CustomBadRequestException("Comment headline cannot be empty");
         } else if (newComment.getBody() == null || newComment.getBody().isEmpty()) {
             throw new CustomBadRequestException("Comment body cannot be empty");
@@ -102,13 +119,12 @@ public class CommentRestController {
             throw new CustomBadRequestException("Wrong or missing Location Id");
         }
 
-        return coRepository.findById(id)
-                .map(comment -> {
-                    comment.setHeadline(newComment.getHeadline());
-                    comment.setBody(newComment.getBody());
-                    comment.setAppUser(newComment.getAppUser());
-                    comment.setLocation(newComment.getLocation());
-                    return coRepository.save(comment);
+        return comment.map(com -> {
+                    com.setHeadline(newComment.getHeadline());
+                    com.setBody(newComment.getBody());
+                    com.setAppUser(newComment.getAppUser());
+                    com.setLocation(newComment.getLocation());
+                    return coRepository.save(com);
                 });
 
     }

@@ -38,7 +38,6 @@ public class AppUser {
     private String firstname;
 
     @JsonView(Views.Elevated.class)
-    @NotBlank()
     private String lastname;
 
     @JsonView(Views.Elevated.class)
@@ -49,11 +48,24 @@ public class AppUser {
 
     }
 
-    public AppUser(String username, String passwordHash, String firstname, String lastname, String userRole) {
+    public AppUser(String username, String passwordHash, String userRole, String firstname, String lastname) {
         this.username = username;
         this.passwordHash = passwordHash;
+        this.userRole = userRole;
         this.firstname = firstname;
         this.lastname = lastname;
+    }
+
+    public AppUser(String username, String passwordHash, String userRole, String firstname) {
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.userRole = userRole;
+        this.firstname = firstname;
+    }
+
+    public AppUser(String username, String passwordHash, String userRole) {
+        this.username = username;
+        this.passwordHash = passwordHash;
         this.userRole = userRole;
     }
 

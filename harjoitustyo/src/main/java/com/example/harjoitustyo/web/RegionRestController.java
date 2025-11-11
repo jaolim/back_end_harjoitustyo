@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class RegionRestController {
         this.rRepository = rRepository;
     }
 
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @JsonView(Views.Public.class)
     @GetMapping(value = "/regions")
     public List<Region> getAllRegions() {
@@ -39,6 +41,7 @@ public class RegionRestController {
 
     }
 
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @JsonView(Views.Public.class)
     @GetMapping(value = "/regions/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -50,6 +53,7 @@ public class RegionRestController {
         return region;
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @PostMapping("/regions")
     public Region postRegion(@RequestBody Region region) {
@@ -61,6 +65,7 @@ public class RegionRestController {
         return rRepository.save(region);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @DeleteMapping("/regions/{id}")
     public void deleteRegion(@PathVariable Long id) {
