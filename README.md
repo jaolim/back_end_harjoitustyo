@@ -50,5 +50,5 @@ Käyttäjien oikeudet on jaettu kolmeen kategoriaan: `ADMIN`, `USER` ja `omistaj
 
 Sovellus sisältää REST rajapinnan, jonka polut muodostuvat periaatteella kaikki:`{baseurl}/resources`, yksittäinen: `{baseurl}/resources/{id}`.
 
-[REST dokumentaatio](REST_documentation)
+[REST dokumentaatio](REST_documentation.md)
 
