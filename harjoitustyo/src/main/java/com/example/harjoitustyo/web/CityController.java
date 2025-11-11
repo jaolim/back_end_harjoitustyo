@@ -1,42 +1,107 @@
 package com.example.harjoitustyo.web;
 
+import java.util.Optional;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.LocationRepository;
 import com.example.harjoitustyo.domain.Region;
+import com.example.harjoitustyo.domain.RegionRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class CityController {
 
+    private RegionRepository rRepository;
     private CityRepository cRepository;
     private LocationRepository lRepository;
 
-    public CityController(CityRepository cRepository, LocationRepository lRepository) {
+    public CityController(RegionRepository rRepository, CityRepository cRepository, LocationRepository lRepository) {
         this.cRepository = cRepository;
         this.lRepository = lRepository;
+        this.rRepository = rRepository;
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping(value = { "/city/add" })
+    public String addCity(Model model) {
+        model.addAttribute("city", new City());
+        model.addAttribute("regions", rRepository.findAll());
+        return "cityAdd";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/city/edit/{id}")
+    public String editEdit(@PathVariable("id") Long cityId, Model model, HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
+        String referer = request.getHeader("Referer");
+        Optional<City> city = cRepository.findById(cityId);
+        if (!city.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "City by the ID of " + cityId + " does not exist.");
+            return "redirect:" + referer;
+        }
+        model.addAttribute("regions", rRepository.findAll());
+        model.addAttribute("city", city);
+        return "cityEdit";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/city/save")
+    public String saveCity(City city, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        String referer = request.getHeader("Referer");
+        if (city.getName().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "City name is required.");
+            return "redirect:" + referer;
+        }
+        if (cRepository.existsByName(city.getName())) {
+            if (city.getCityId() != null) {
+                City isSame = cRepository.findByName(city.getName()).get();
+                if (isSame.getCityId() != city.getCityId()) {
+                    redirectAttributes.addFlashAttribute("errorMessage",
+                            "City by the name of " + city.getName() + " already exists.");
+                    return "redirect:" + referer;
+                }
+            }
+            if (city.getCityId() == null) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "City by the name of " + city.getName() + " already exists.");
+                return "redirect:" + referer;
+            }
+        }
+        cRepository.save(city);
+        return "redirect:../region/" + city.getRegion().getRegionId();
     }
 
     @GetMapping(value = { "/city/{id}" })
-    public String getCity(@PathVariable("id") Long cityId, Model model) {
-        City city = cRepository.findById(cityId)
-                .orElseThrow(() -> new CustomNotFoundException("City by the id of " + cityId + " does not exist."));
-        Region region = city.getRegion();
-        model.addAttribute("city", city);
+    public String getCity(@PathVariable("id") Long cityId, Model model, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        Optional<City> city = cRepository.findById(cityId);
+        if (!city.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "City by the id of " + cityId + " does not exist.");
+            return "redirect:" + referer;
+        }
+        Region region = city.get().getRegion();
+        model.addAttribute("city", city.get());
         model.addAttribute("region", region);
-        model.addAttribute("locations", lRepository.findByCity(city));
+        model.addAttribute("locations", lRepository.findByCity(city.get()));
         return "city";
     }
 
-    
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/city/delete/{id}")
     public String deleteCity(@PathVariable("id") Long cityId, Model model, HttpServletRequest request) {

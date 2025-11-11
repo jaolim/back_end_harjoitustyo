@@ -24,6 +24,7 @@
         <a sec:authorize="hasAuthority('ADMIN')" class="btn btn-danger" th:href="@{/db/repopulate}">Repopulate
             Database</a>
     </div>
+    <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></div>
     <div>
         <table class="table table-striped">
             <tr>
@@ -36,7 +37,8 @@
                 <td th:text="${region.name}"></td>
                 <td th:text="${region.description}"></td>
                 <td><a class="btn btn-info" th:href="@{/region/{id}(id=${region.regionId})}">Select</a></td>
-                <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/region/edit/{id}(id=${region.regionId})}">Edit</a></td>
+                <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info"
+                        th:href="@{/region/edit/{id}(id=${region.regionId})}">Edit</a></td>
                 <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger"
                         th:href="@{/region/delete/{id}(id=${region.regionId})}">Delete</a></td>
             </tr>

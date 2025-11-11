@@ -22,7 +22,7 @@
     <h1>Add Region</h1>
 
     <div>
-        <form th:object="${region}" th:action="@{save}" actin="#" method="post">
+        <form th:object="${region}" th:action="@{save}" method="post">
             <p>
                 <input type="text" id="name" th:field="*{name}" />
                 <label for="RegionName">Region Name</label>

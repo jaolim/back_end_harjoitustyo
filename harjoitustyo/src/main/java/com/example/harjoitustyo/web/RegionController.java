@@ -29,13 +29,17 @@ public class RegionController {
         this.cRepository = cRepository;
     }
 
-    // @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @GetMapping(value = { "/region/{id}" })
-    public String getRegion(@PathVariable("id") Long regionId, Model model) {
-        Region region = rRepository.findById(regionId)
-                .orElseThrow(() -> new CustomNotFoundException("Region by the id of " + regionId + " does not exist."));
-        model.addAttribute("region", region);
-        model.addAttribute("cities", cRepository.findByRegion(region));
+    public String getRegion(@PathVariable("id") Long regionId, Model model, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        Optional<Region> region = rRepository.findById(regionId);
+        if(!region.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Region by the id of " + regionId + " does not exist.");
+            return "redirect:" + referer;
+        }
+        model.addAttribute("region", region.get());
+        model.addAttribute("cities", cRepository.findByRegion(region.get()));
         return "region";
 
     }

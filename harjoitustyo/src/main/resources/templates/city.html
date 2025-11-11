@@ -47,9 +47,10 @@
                 <td th:text="${city.description}"></td>
                 <td th:text="${city.population}"></td>
                 <td th:text="${city.area}"></td>
-                <td><img style="height: 50px" th:src="${city.image}"/></td>
+                <td><img style="height: 50px" th:src="${city.image}" /></td>
             </tr>
         </table>
+        <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></div>
         <table class="table table-striped">
             <tr>
                 <th>Location Name</th>

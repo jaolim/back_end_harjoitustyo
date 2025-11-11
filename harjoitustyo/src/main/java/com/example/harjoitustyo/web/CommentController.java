@@ -15,7 +15,6 @@ import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.Comment;
 import com.example.harjoitustyo.domain.Location;
-import com.example.harjoitustyo.domain.LocationRepository;
 import com.example.harjoitustyo.domain.Region;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,12 +24,32 @@ import com.example.harjoitustyo.domain.CommentRepository;
 @Controller
 public class CommentController {
 
-    private LocationRepository lRepository;
     private CommentRepository coRepository;
 
-    public CommentController(LocationRepository lRepository, CommentRepository coRepository) {
-        this.lRepository = lRepository;
+    public CommentController(CommentRepository coRepository) {
         this.coRepository = coRepository;
+    }
+
+    @GetMapping(value = { "/comment/edit/{id}" })
+    public String getLocation(@PathVariable("id") Long commentId, Model model, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        Optional<Comment> comment = coRepository.findById(commentId);
+        if (!comment.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Comment by the id of " + commentId + " does not exist.");
+            return "redirect:" + referer;
+        }
+        Location location = comment.get().getLocation();
+        City city = location.getCity();
+        Region region = city.getRegion();
+
+        model.addAttribute("comment", comment.get());
+        model.addAttribute("location", location);
+        model.addAttribute("city", city);
+        model.addAttribute("region", region);
+        model.addAttribute("comments", coRepository.findByLocation(location));
+        return "commentEdit";
     }
 
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
@@ -41,7 +60,7 @@ public class CommentController {
         String referer = request.getHeader("Referer");
         boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"));
         Optional<Comment> comment = coRepository.findById(commentId);
-        if (!comment.isPresent()){
+        if (!comment.isPresent()) {
             throw new CustomNotFoundException("Comment by the ID of " + commentId + " does not exist");
         } else if (!isAdmin && !comment.get().getAppUser().getUsername().equals(username)) {
             redirectAttributes.addFlashAttribute("errorMessage", "Only admins can delete comments by other users.");
