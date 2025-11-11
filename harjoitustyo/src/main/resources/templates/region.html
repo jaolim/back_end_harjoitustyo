@@ -34,6 +34,7 @@
                 <td><img style="height:50px" th:src="${region.image}"></td>
             </tr>
         </table>
+        <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></div>
         <table class="table table-striped">
             <tr>
                 <th>City Name</th>

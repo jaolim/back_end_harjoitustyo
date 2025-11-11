@@ -33,6 +33,7 @@ public class CustomExceptionHandler {
         }
 
         @ExceptionHandler(CustomForbiddenException.class)
+        @ResponseStatus(HttpStatus.FORBIDDEN)
         public ResponseEntity<Map<String, Object>> CustomRestForbidden(CustomForbiddenException exception) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                                 .body(Map.of(

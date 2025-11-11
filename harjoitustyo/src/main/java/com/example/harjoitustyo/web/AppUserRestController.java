@@ -38,6 +38,7 @@ public class AppUserRestController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @GetMapping(value = "/appusers")
+    @ResponseStatus(HttpStatus.OK)
     public List<AppUser> getAllAppUsers() {
         return (List<AppUser>) rRepository.findAll();
 
@@ -74,6 +75,7 @@ public class AppUserRestController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @DeleteMapping("/appusers/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public void deleteAppUser(@PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("AppUser by id " + id + " does not exist");

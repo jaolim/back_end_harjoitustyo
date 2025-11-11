@@ -1,5 +1,7 @@
 package com.example.harjoitustyo.web;
 
+import java.util.Optional;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import com.example.harjoitustyo.domain.CommentRepository;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class LocationController {
@@ -30,17 +32,22 @@ public class LocationController {
     }
 
     @GetMapping(value = { "/location/{id}" })
-    public String getLocation(@PathVariable("id") Long locationId, Model model) {
-        Location location = lRepository.findById(locationId)
-                .orElseThrow(() -> new CustomNotFoundException("Location by the id of " + locationId + " does not exist."));
-        City city = location.getCity();
+    public String getLocation(@PathVariable("id") Long locationId, Model model, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        Optional<Location> location = lRepository.findById(locationId);
+        if (!location.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Location by the id of " + locationId + " does not exist.");
+            return "redirect:" + referer;
+        }
+        City city = location.get().getCity();
         Region region = city.getRegion();
-        model.addAttribute(location);
+        model.addAttribute(location.get());
         model.addAttribute("city", city);
         model.addAttribute("region", region);
-        model.addAttribute("comments", coRepository.findByLocation(location));
+        model.addAttribute("comments", coRepository.findByLocation(location.get()));
         return "location";
-
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -52,6 +59,4 @@ public class LocationController {
 
     }
 
-    
 }
-
