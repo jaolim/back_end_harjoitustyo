@@ -54,6 +54,7 @@ public class RegionRestController {
         return region;
     }
 
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @PostMapping("/regions")
