@@ -1,20 +1,26 @@
 package com.example.harjoitustyo.web;
 
+import java.lang.foreign.Linker.Option;
 import java.util.Optional;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
+import com.example.harjoitustyo.domain.AppUser;
+import com.example.harjoitustyo.domain.AppUserRepository;
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.Comment;
 import com.example.harjoitustyo.domain.Location;
+import com.example.harjoitustyo.domain.LocationRepository;
 import com.example.harjoitustyo.domain.Region;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,10 +30,14 @@ import com.example.harjoitustyo.domain.CommentRepository;
 @Controller
 public class CommentController {
 
+    private LocationRepository lRepository;
     private CommentRepository coRepository;
+    private AppUserRepository auRepository;
 
-    public CommentController(CommentRepository coRepository) {
+    public CommentController(LocationRepository lRepository, CommentRepository coRepository, AppUserRepository auRepository) {
+        this.lRepository = lRepository;
         this.coRepository = coRepository;
+        this.auRepository = auRepository;
     }
 
     @GetMapping(value = { "/comment/edit/{id}" })
@@ -52,6 +62,39 @@ public class CommentController {
         return "commentEdit";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @GetMapping(value = { "/location/{id}/comment/add" })
+    public String addComment(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        AppUser appUser = auRepository.findByUsername(username);
+        model.addAttribute("appUser", appUser);
+        model.addAttribute("locations", lRepository.findAll());
+        model.addAttribute("comment", new Comment());
+        return "commentAdd";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/location/{id}/comment/save")
+    public String saveComment(@PathVariable("id") Long id, Comment comment, HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
+        String referer = request.getHeader("Referer");
+        if (comment.getHeadline().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Comment headline is required.");
+            return "redirect:" + referer;
+        }
+        if (comment.getBody().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Comment body is required.");
+            return "redirect:" + referer;
+        }
+        coRepository.save(comment);
+        return "redirect:/";
+    }
+//   return "redirect:../location/" + comment.getLocation().getLocationId();
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @GetMapping(value = "/comment/delete/{id}")
     public String deleteComment(@PathVariable("id") Long commentId, HttpServletRequest request,

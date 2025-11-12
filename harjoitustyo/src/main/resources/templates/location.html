@@ -72,6 +72,8 @@
                 <th>Comment Headline</th>
                 <th>Comment Body</th>
                 <th>By User</th>
+                <th sec:authorize="isAuthenticated()"><a class="btn btn-info" th:href="@{/location/{id}/comment/add(id=${location.locationId})}">Add New
+                        Comment</a></th>
             </tr>
             <tr th:each="comment : ${comments}">
                 <td th:text="${comment.headline}"></td>
