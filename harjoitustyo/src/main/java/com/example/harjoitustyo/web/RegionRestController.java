@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.harjoitustyo.Views;
 import com.example.harjoitustyo.Exception.CustomBadRequestException;
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
+import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.Region;
 import com.example.harjoitustyo.domain.RegionRepository;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -62,6 +63,10 @@ public class RegionRestController {
         } else if (region.getName() == null || region.getName().isEmpty()) {
             throw new CustomBadRequestException("Region name cannot be empty");
         }
+        Optional<Region> isSame = rRepository.findByName(region.getName());
+        if (isSame.isPresent()) {
+            throw new CustomBadRequestException("Region name has to be unique");
+        }
         return rRepository.save(region);
     }
 
@@ -72,6 +77,10 @@ public class RegionRestController {
             throw new CustomNotFoundException("Region by id" + id + " does not exist");
         } else if (newRegion.getName() == null || newRegion.getName().isEmpty()) {
             throw new CustomBadRequestException("Region name cannot be empty");
+        }
+        Optional<Region> isSame = rRepository.findByName(newRegion.getName());
+        if (isSame.isPresent() && isSame.get().getRegionId() != id) {
+            throw new CustomBadRequestException("Region name has to be unique");
         }
 
         return rRepository.findById(id)

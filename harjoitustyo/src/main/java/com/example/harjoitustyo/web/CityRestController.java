@@ -89,7 +89,7 @@ public class CityRestController {
         }
         Optional<City> isSame = cRepository.findByName(newCity.getName());
         if (isSame.isPresent() && isSame.get().getCityId() != id) {
-            throw new CustomBadRequestException("City has to be unique");
+            throw new CustomBadRequestException("City name has to be unique");
         }
 
         return cRepository.findById(id)

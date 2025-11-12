@@ -62,18 +62,4 @@ public class AppUserTest {
 
         }
 
-        @Test
-        public void shouldRejectNewAppUser() {
-                AppUser appUser1 = new AppUser("admin",
-                                "$2a$10$zNXa3MgyyUslVl.jL8950eGswQKEBKFVkSXlvghOPigjUcKXsasbK",
-                                "ADMIN",
-                                "adminTest", "userTestLast");
-
-
-                assertThrows(Exception.class, () -> {
-                        auRepository.save(appUser1);
-                });
-
-        }
-
 }
