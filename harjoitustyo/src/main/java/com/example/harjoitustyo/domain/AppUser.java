@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +30,7 @@ public class AppUser {
 
     @JsonView(Views.Public.class)
     @NotBlank(message = "Username cannot be empty")
+    @Column(nullable = false, unique = true)
     private String username;
 
     @JsonView(Views.Internal.class)

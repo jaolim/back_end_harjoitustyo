@@ -75,8 +75,8 @@ public class CommentController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        AppUser appUser = auRepository.findByUsername(username);
-        model.addAttribute("appUser", appUser);
+        Optional<AppUser> appUser = auRepository.findByUsername(username);
+        model.addAttribute("appUser", appUser.get());
         model.addAttribute("locations", lRepository.findAll());
         model.addAttribute("comment", new Comment());
         return "commentAdd";
@@ -101,8 +101,8 @@ public class CommentController {
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        AppUser appUser = auRepository.findByUsername(username);
-        model.addAttribute("appUser", appUser);
+        Optional<AppUser> appUser = auRepository.findByUsername(username);
+        model.addAttribute("appUser", appUser.get());
         model.addAttribute("locations", lRepository.findAll());
         model.addAttribute("comment", comment.get());
         return "commentEdit";
