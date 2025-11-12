@@ -66,6 +66,7 @@
                 <td th:text="${location.description}"></td>
                 <td th:text="${location.address}"></td>
                 <td><a class="btn btn-info" th:href="@{/location/{id}(id=${location.locationId})}">Select</a></td>
+                <th sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/location/edit/{id}(id=${location.locationId})}">Edit Location</a></th>
                 <td sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-danger"
                         th:href="@{/location/delete/{id}(id=${location.locationId})}">Delete</a></td>
             </tr>

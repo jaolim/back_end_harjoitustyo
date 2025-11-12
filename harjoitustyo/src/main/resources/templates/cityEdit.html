@@ -19,12 +19,12 @@
         </form>
     </div>
 
-    <h1>Add City</h1>
+    <h1>Edit City</h1>
 
     <div>
         <form th:object="${city}" th:action="@{../save}" method="post">
             <p>
-                <label for="RegionId"></label>
+                <label for="CityId"></label>
                 <input type="hidden" id="id" th:field="*{cityId}" readyonly="readyonly" />
             </p>
             <p>

@@ -4,7 +4,7 @@
     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <head>
-    <title>Add Region</title>
+    <title>Add City</title>
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
@@ -19,25 +19,31 @@
         </form>
     </div>
 
-    <h1>Edit Region</h1>
+    <h1>Edit Location</h1>
+
     <div>
-        <form th:object="${region}" th:action="@{../save/{id}(id=2)}" method="post">
-            <input type="hidden" name="_method" value="put"/>
+        <form th:object="${location}" th:action="@{../save}" method="post">
             <p>
-                <label for="RegionId"></label>
-                <input type="hidden" id="id" th:field="*{regionId}" readonly="readonly"/>
+                <label for="LocationId"></label>
+                <input type="hidden" id="id" th:field="*{locationId}" readyonly="readyonly" />
             </p>
             <p>
                 <input type="text" id="name" th:field="*{name}" />
-                <label for="RegionName">Region Name</label>
+                <label for="LocatioName">Location Name</label>
             </p>
             <p>
                 <input type="text" id="description" th:field="*{description}" />
-                <label for="RegionDescription">Region Description</label>
+                <label for="LocationDescription">Location Description</label>
             </p>
             <p>
                 <input type="text" id="image" th:field="*{image}" />
-                <label for="RegionImage">Image Source Url</label>
+                <label for="CityImage">Image Source Url</label>
+            </p>
+            <p>
+                <select id="cities" th:field="*{city}" class="form-control">
+                    <option th:each="city: ${cities}" th:value="${city.cityId}" th:text="${city.name}">
+                    </option>
+                    <label for="cities">Regions</label>
             </p>
             <input class="btn btn-success" type="submit" value="Save"></input>
         </form>
