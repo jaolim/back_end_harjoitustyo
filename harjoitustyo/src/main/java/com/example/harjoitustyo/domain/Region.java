@@ -25,7 +25,7 @@ public class Region {
 
     @JsonView(Views.Public.class)
     @JsonIgnoreProperties("region")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval =  true, mappedBy = "region")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "region")
     private List<City> cities;
 
     @Column(nullable = false, unique = true)
@@ -42,6 +42,11 @@ public class Region {
 
     public Region(String name) {
         this.name = name;
+    }
+
+    public Region(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
     public Region(String name, String description, String image) {
