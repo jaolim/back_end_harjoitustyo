@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
@@ -34,7 +35,8 @@ public class CommentController {
     private CommentRepository coRepository;
     private AppUserRepository auRepository;
 
-    public CommentController(LocationRepository lRepository, CommentRepository coRepository, AppUserRepository auRepository) {
+    public CommentController(LocationRepository lRepository, CommentRepository coRepository,
+            AppUserRepository auRepository) {
         this.lRepository = lRepository;
         this.coRepository = coRepository;
         this.auRepository = auRepository;
@@ -67,6 +69,12 @@ public class CommentController {
     public String addComment(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
         String referer = request.getHeader("Referer");
+        if (!lRepository.existsById(id)) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Location by the ID of " + id + " does not exist.");
+            return "redirect:" + referer;
+        }
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         AppUser appUser = auRepository.findByUsername(username);
@@ -74,6 +82,32 @@ public class CommentController {
         model.addAttribute("locations", lRepository.findAll());
         model.addAttribute("comment", new Comment());
         return "commentAdd";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/location/{id}/comment/edit/{commentId}")
+    public String editComment(@PathVariable("id") Long locationId, @PathVariable("commentId") Long commentId,
+            Model model, HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
+        String referer = request.getHeader("Referer");
+        if (!lRepository.existsById(locationId)) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Location by the ID of " + locationId + " does not exist.");
+            return "redirect:" + referer;
+        }
+        Optional<Comment> comment = coRepository.findById(commentId);
+        if (!comment.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Location by the ID of " + locationId + " does not exist.");
+            return "redirect:" + referer;
+        }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        AppUser appUser = auRepository.findByUsername(username);
+        model.addAttribute("appUser", appUser);
+        model.addAttribute("locations", lRepository.findAll());
+        model.addAttribute("comment", comment.get());
+        return "commentEdit";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -94,7 +128,39 @@ public class CommentController {
         coRepository.save(comment);
         return "redirect:/";
     }
-//   return "redirect:../location/" + comment.getLocation().getLocationId();
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/location/{id}/comment/save/{commentId}")
+    public String putLocation(@PathVariable("id") Long locationId, @PathVariable("commentId") Long commentId,
+            Comment newComment,
+            RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        if (newComment.getHeadline().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Comment headline is required.");
+            return "redirect:" + referer;
+        }
+        if (newComment.getBody().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Comment body is required.");
+            return "redirect:" + referer;
+        }
+        if (!coRepository.findById(commentId).isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Comment by the id of " + commentId + " does not exist");
+            return "redirect:/";
+        }
+
+        coRepository.findById(commentId)
+                .map(comment -> {
+                    comment.setHeadline(newComment.getHeadline());
+                    comment.setBody(newComment.getBody());
+                    return coRepository.save(comment);
+                });
+
+        return "redirect:/location/" + locationId;
+    }
+
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @GetMapping(value = "/comment/delete/{id}")
     public String deleteComment(@PathVariable("id") Long commentId, HttpServletRequest request,

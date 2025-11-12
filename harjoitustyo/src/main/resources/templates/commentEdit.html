@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <title>Add Comment</title>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body body style="margin:5px">
+    <a th:href="@{/}">Home</a>
+    <div>
+        <i sec:authorize="isAuthenticated()">User: <span sec:authentication="name"></span></i>
+        <a sec:authorize="!isAuthenticated()" class="btn btn-primary" th:href="@{/login}">Login</a>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+            <input type="submit" value="Logout" class="btn btn-sm btn-danger" />
+        </form>
+    </div>
+
+    <h1>Add Comment</h1>
+
+    <div>
+        <form th:object="${comment}" th:action="@{../save/{id}(id=${comment.commentId})}" method="post">
+            <input type="hidden" name="_method" value="put" />
+            <p>
+                <input type="hidden" th:value="${appUser.appUserId}" name="appUser" />
+            </p>
+            <p>
+                <input type="text" id="headline" th:field="*{headline}" />
+                <label for="CommentName">Comment Headline</label>
+            </p>
+            <p>
+                <input type="text" id="body" th:field="*{body}" />
+                <label for="CommentBody">Comment Body</label>
+            </p>
+            <p>
+                <select id="locations" th:field="*{location}" class="form-control" disabled>
+                    <option th:each="location: ${locations}" th:value="${location.locationId}"
+                        th:text="${location.name}">
+                    </option>
+                    <label for="locations">Locations</label>
+            </p>
+            <p>
+                <input class="btn btn-success" type="submit" value="Save"></input>
+            </p>
+        </form>
+    </div>
+    <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></div>
+</body>

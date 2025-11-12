@@ -80,7 +80,7 @@
                 <td th:text="${comment.body}"></td>
                 <td th:text="${comment.getAppUser().getUsername()}"></td>
                 <td><a th:if="${comment.appUser.username == #authentication.name}" class="btn btn-info"
-                        th:href="@{/comments/edit/{id}(id=${comment.commentId})}">Edit</a></td>
+                        th:href="@{/location/{locationId}/comment/edit/{id}(id=${comment.commentId}, locationId=${location.locationId})}">Edit</a></td>
                 <td><a th:if="${comment.appUser.username == #authentication.name or #authorization.expression('hasAuthority(''ADMIN'')')}"
                         sec:authorize="isAuthenticated()" class="btn btn-danger"
                         th:href="@{/comment/delete/{id}(id=${comment.commentId})}">Delete</a>
