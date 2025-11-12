@@ -4,7 +4,7 @@
     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <head>
-    <title>Edit Region</title>
+    <title>Add Comment</title>
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
@@ -19,25 +19,27 @@
         </form>
     </div>
 
-    <h1>Edit Region</h1>
+    <h1>Add Comment</h1>
+
     <div>
-        <form th:object="${region}" th:action="@{../save/{id}(id=${region.regionId})}" method="post">
-            <input type="hidden" name="_method" value="put"/>
+        <form th:object="${comment}" th:action="@{save}" method="post">
             <p>
-                <label for="RegionId"></label>
-                <input type="hidden" id="id" th:field="*{regionId}" readonly="readonly"/>
+                <input type="hidden" th:value="${appUser.appUserId}" name="appUser" />
             </p>
             <p>
-                <input type="text" id="name" th:field="*{name}" />
-                <label for="RegionName">Region Name</label>
+                <input type="text" id="headline" th:field="*{headline}" />
+                <label for="CommentName">Comment Headline</label>
             </p>
             <p>
-                <input type="text" id="description" th:field="*{description}" />
-                <label for="RegionDescription">Region Description</label>
+                <input type="text" id="body" th:field="*{body}" />
+                <label for="CommentBody">Comment Body</label>
             </p>
             <p>
-                <input type="text" id="image" th:field="*{image}" />
-                <label for="RegionImage">Image Source Url</label>
+                <select id="locations" th:field="*{location}" class="form-control">
+                    <option th:each="location: ${locations}" th:value="${location.locationId}"
+                        th:text="${location.name}">
+                    </option>
+                    <label for="locations">Locations</label>
             </p>
             <input class="btn btn-success" type="submit" value="Save"></input>
         </form>

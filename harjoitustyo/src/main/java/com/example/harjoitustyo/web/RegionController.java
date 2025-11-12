@@ -15,6 +15,7 @@ import com.example.harjoitustyo.domain.RegionRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -30,10 +31,11 @@ public class RegionController {
     }
 
     @GetMapping(value = { "/region/{id}" })
-    public String getRegion(@PathVariable("id") Long regionId, Model model, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public String getRegion(@PathVariable("id") Long regionId, Model model, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         Optional<Region> region = rRepository.findById(regionId);
-        if(!region.isPresent()) {
+        if (!region.isPresent()) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Region by the id of " + regionId + " does not exist.");
             return "redirect:" + referer;
@@ -70,8 +72,8 @@ public class RegionController {
         }
         if (rRepository.existsByName(region.getName())) {
             if (region.getRegionId() != null) {
-                Region isSame = rRepository.findByName(region.getName());
-                if (isSame.getRegionId() != region.getRegionId()) {
+                Optional<Region> isSame = rRepository.findByName(region.getName());
+                if (isSame.get().getRegionId() != region.getRegionId()) {
                     redirectAttributes.addFlashAttribute("errorMessage",
                             "Region by the name of " + region.getName() + " already exists.");
                     return "redirect:" + referer;
@@ -88,17 +90,45 @@ public class RegionController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/region/edit/{id}")
-    public String editRegion(@PathVariable("id") Long regionId, Model model, HttpServletRequest request,
-            RedirectAttributes redirectAttributes) {
+    @PutMapping("/region/save/{id}")
+    public String putRegion(@PathVariable Long id, Region newRegion,
+            RedirectAttributes redirectAttributes, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
+        if (!rRepository.findById(id).isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Region by the id of " + id + " does not exist");
+            return "redirect:/";
+        }
+        Optional<Region> isSame = rRepository.findByName(newRegion.getName());
+        if (isSame.isPresent()) {
+            if (isSame.get().getRegionId() != newRegion.getRegionId()) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Region by the name of " + newRegion.getName() + " already exists.");
+                return "redirect:" + referer;
+            }
+        }
+        rRepository.findById(id)
+                .map(region -> {
+                    region.setName(newRegion.getName());
+                    region.setDescription(newRegion.getDescription());
+                    region.setImage(newRegion.getImage());
+                    return rRepository.save(region);
+                });
+
+        return "redirect:/";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/region/edit/{id}")
+    public String editRegion(@PathVariable("id") Long regionId, Model model,
+            RedirectAttributes redirectAttributes) {
         Optional<Region> region = rRepository.findById(regionId);
         if (!region.isPresent()) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Region by the ID of " + regionId + " does not exist.");
-            return "redirect:" + referer;
+            return "redirect:/";
         }
-        model.addAttribute("region", region);
+        model.addAttribute("region", region.get());
         return "regionEdit";
     }
 

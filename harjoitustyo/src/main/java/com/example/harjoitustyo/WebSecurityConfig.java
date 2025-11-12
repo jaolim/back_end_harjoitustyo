@@ -15,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -35,12 +36,16 @@ public class WebSecurityConfig {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public HiddenHttpMethodFilter hiddenHttpMethodFilter () {
+        return new HiddenHttpMethodFilter();
+    }
+    
     @Bean
     public SecurityFilterChain webSecurity(HttpSecurity http) throws Exception {
         http
