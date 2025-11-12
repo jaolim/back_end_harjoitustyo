@@ -1,6 +1,5 @@
 package com.example.harjoitustyo.web;
 
-import java.lang.foreign.Linker.Option;
 import java.util.Optional;
 
 import org.springframework.security.access.AccessDeniedException;
