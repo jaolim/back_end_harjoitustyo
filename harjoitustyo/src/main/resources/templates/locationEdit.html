@@ -22,7 +22,8 @@
     <h1>Edit Location</h1>
 
     <div>
-        <form th:object="${location}" th:action="@{../save}" method="post">
+        <form th:object="${location}" th:action="@{../save/{id}(id=${location.locationId})}" method="post">
+            <input type="hidden" name="_method" value="put" />
             <p>
                 <label for="LocationId"></label>
                 <input type="hidden" id="id" th:field="*{locationId}" readyonly="readyonly" />

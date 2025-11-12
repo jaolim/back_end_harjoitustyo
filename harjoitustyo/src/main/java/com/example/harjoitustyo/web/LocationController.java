@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.City;
@@ -29,7 +30,8 @@ public class LocationController {
     private LocationRepository lRepository;
     private CommentRepository coRepository;
 
-    public LocationController(CityRepository cRepository, LocationRepository lRepository, CommentRepository coRepository) {
+    public LocationController(CityRepository cRepository, LocationRepository lRepository,
+            CommentRepository coRepository) {
         this.cRepository = cRepository;
         this.lRepository = lRepository;
         this.coRepository = coRepository;
@@ -55,7 +57,7 @@ public class LocationController {
             return "redirect:" + referer;
         }
         model.addAttribute("cities", cRepository.findAll());
-        model.addAttribute("location", location);
+        model.addAttribute("location", location.get());
         return "locationEdit";
     }
 
@@ -104,6 +106,40 @@ public class LocationController {
         model.addAttribute("region", region);
         model.addAttribute("comments", coRepository.findByLocation(location.get()));
         return "location";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/location/save/{id}")
+    public String putLocation(@PathVariable Long id, Location newLocation,
+            RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        if (newLocation.getName().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Location name is required.");
+            return "redirect:" + referer;
+        }
+        if (!cRepository.findById(id).isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Location by the id of " + id + " does not exist");
+            return "redirect:/";
+        }
+        Optional<Location> isSame = lRepository.findByName(newLocation.getName());
+        if (isSame.isPresent()) {
+            if (isSame.get().getLocationId() != newLocation.getLocationId()) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Location the name of " + newLocation.getName() + " already exists.");
+                return "redirect:" + referer;
+            }
+        }
+        lRepository.findById(id)
+                .map(location -> {
+                    location.setName(newLocation.getName());
+                    location.setDescription(newLocation.getDescription());
+                    location.setImage(newLocation.getImage());
+                    return lRepository.save(location);
+                });
+
+        return "redirect:/city/" + newLocation.getCity().getCityId();
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
