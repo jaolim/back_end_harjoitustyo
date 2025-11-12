@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.Region;
 import com.example.harjoitustyo.domain.RegionRepository;
@@ -16,7 +15,6 @@ import com.example.harjoitustyo.domain.RegionRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -31,7 +29,7 @@ public class RegionController {
     }
 
     @GetMapping(value = { "/region/{id}" })
-    public String getRegion(@PathVariable("id") Long regionId, Model model, RedirectAttributes redirectAttributes,
+    public String showRegion(@PathVariable("id") Long regionId, Model model, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         Optional<Region> region = rRepository.findById(regionId);
@@ -47,18 +45,24 @@ public class RegionController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping(value = "/region/delete/{id}")
-    public String deleteRegion(@PathVariable("id") Long regionId, Model model, HttpServletRequest request) {
-        String referer = request.getHeader("Referer");
-        rRepository.deleteById(regionId);
-        return "redirect:" + referer;
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = { "/region/add" })
     public String addRegion(Model model) {
         model.addAttribute("region", new Region());
         return "regionAdd";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/region/edit/{id}")
+    public String editRegion(@PathVariable("id") Long regionId, Model model,
+            RedirectAttributes redirectAttributes) {
+        Optional<Region> region = rRepository.findById(regionId);
+        if (!region.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Region by the ID of " + regionId + " does not exist.");
+            return "redirect:/";
+        }
+        model.addAttribute("region", region.get());
+        return "regionEdit";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -91,7 +95,7 @@ public class RegionController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/region/save/{id}")
-    public String putRegion(@PathVariable Long id, Region newRegion,
+    public String saveEditedRegion(@PathVariable Long id, Region newRegion,
             RedirectAttributes redirectAttributes, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         if (!rRepository.findById(id).isPresent()) {
@@ -119,17 +123,11 @@ public class RegionController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/region/edit/{id}")
-    public String editRegion(@PathVariable("id") Long regionId, Model model,
-            RedirectAttributes redirectAttributes) {
-        Optional<Region> region = rRepository.findById(regionId);
-        if (!region.isPresent()) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "Region by the ID of " + regionId + " does not exist.");
-            return "redirect:/";
-        }
-        model.addAttribute("region", region.get());
-        return "regionEdit";
+    @GetMapping(value = "/region/delete/{id}")
+    public String removeRegion(@PathVariable("id") Long regionId, Model model, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        rRepository.deleteById(regionId);
+        return "redirect:" + referer;
     }
 
 }

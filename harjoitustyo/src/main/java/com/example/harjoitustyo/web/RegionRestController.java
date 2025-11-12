@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.harjoitustyo.Views;
 import com.example.harjoitustyo.Exception.CustomBadRequestException;
-import com.example.harjoitustyo.Exception.CustomForbiddenException;
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.Region;
 import com.example.harjoitustyo.domain.RegionRepository;
@@ -46,7 +45,7 @@ public class RegionRestController {
     @JsonView(Views.Public.class)
     @GetMapping(value = "/regions/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Region> getRegionById(@PathVariable Long id) {
+    public Optional<Region> getRegion(@PathVariable Long id) {
         Optional<Region> region = rRepository.findById(id);
         if (!region.isPresent()) {
             throw new CustomNotFoundException("Region does not exist");
@@ -66,16 +65,6 @@ public class RegionRestController {
         return rRepository.save(region);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @JsonView(Views.Elevated.class)
-    @DeleteMapping("/regions/{id}")
-    public void deleteRegion(@PathVariable Long id) {
-        if (!rRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("Region by id " + id + " does not exist");
-        }
-        rRepository.deleteById(id);
-    }
-
     @JsonView(Views.Elevated.class)
     @PutMapping("/regions/{id}")
     public Optional<Region> putRegion(@RequestBody Region newRegion, @PathVariable Long id) {
@@ -93,6 +82,16 @@ public class RegionRestController {
                     return rRepository.save(region);
                 });
 
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @JsonView(Views.Elevated.class)
+    @DeleteMapping("/regions/{id}")
+    public void deleteRegion(@PathVariable Long id) {
+        if (!rRepository.findById(id).isPresent()) {
+            throw new CustomNotFoundException("Region by id " + id + " does not exist");
+        }
+        rRepository.deleteById(id);
     }
 
 }
