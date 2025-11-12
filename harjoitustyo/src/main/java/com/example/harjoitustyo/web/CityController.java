@@ -113,7 +113,7 @@ public class CityController {
                     "City name is required.");
             return "redirect:" + referer;
         }
-        if (!rRepository.findById(id).isPresent()) {
+        if (!cRepository.findById(id).isPresent()) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "City by the id of " + id + " does not exist");
             return "redirect:/";
