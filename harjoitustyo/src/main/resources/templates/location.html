@@ -56,12 +56,14 @@
                 <th>Location Description</th>
                 <th>Location Address</th>
                 <th>Location Image</th>
+                <th sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/location/add}">Add New
+                        Location</a></th>
             </tr>
             <tr>
                 <td th:text="${location.name}"></td>
                 <td th:text="${location.description}"></td>
                 <td th:text="${location.address}"></td>
-                <td><img th:src="${location.image}"></td>
+                <td><img style="height:50px" th:src="${location.image}"></td>
             </tr>
         </table>
         <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></div>

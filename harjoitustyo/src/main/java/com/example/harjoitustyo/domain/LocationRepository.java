@@ -8,4 +8,6 @@ public interface LocationRepository extends CrudRepository<Location, Long>{
 
         List<Location> findByCity(City city);
 
+        boolean existsByName(String name);
+
 }

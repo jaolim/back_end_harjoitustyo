@@ -43,7 +43,7 @@ public class HarjoitustyoApplication {
 						"Finland’s capital, combining coastal beauty, culture, and international life.",
 						rUusimaa,
 						"https://upload.wikimedia.org/wikipedia/commons/c/c4/Helsinki.vaakuna.svg");
-				Location location1 = new Location("Central Railway Station", "The main railway station.", cHelsinki);
+				Location location1 = new Location("Central Railway Station", "The main railway station.", cHelsinki, "https://upload.wikimedia.org/wikipedia/commons/e/ee/Helsinki_Central_railway_station_in_Finland%2C_2021_July.jpg");
 				Location location2 = new Location(
 						"Suomenlinna Fortress",
 						"A historic sea fortress reachable by ferry, popular for walks and picnics.",
