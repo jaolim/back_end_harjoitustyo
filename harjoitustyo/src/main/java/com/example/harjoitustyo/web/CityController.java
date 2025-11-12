@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,7 +44,7 @@ public class CityController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/city/edit/{id}")
-    public String editEdit(@PathVariable("id") Long cityId, Model model, HttpServletRequest request,
+    public String editCity(@PathVariable("id") Long cityId, Model model, HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
         String referer = request.getHeader("Referer");
         Optional<City> city = cRepository.findById(cityId);
@@ -53,7 +54,7 @@ public class CityController {
             return "redirect:" + referer;
         }
         model.addAttribute("regions", rRepository.findAll());
-        model.addAttribute("city", city);
+        model.addAttribute("city", city.get());
         return "cityEdit";
     }
 
@@ -100,6 +101,40 @@ public class CityController {
         model.addAttribute("region", region);
         model.addAttribute("locations", lRepository.findByCity(city.get()));
         return "city";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/city/save/{id}")
+    public String putRegion(@PathVariable Long id, City newCity,
+            RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        if (newCity.getName().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "City name is required.");
+            return "redirect:" + referer;
+        }
+        if (!rRepository.findById(id).isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "City by the id of " + id + " does not exist");
+            return "redirect:/";
+        }
+        Optional<City> isSame = cRepository.findByName(newCity.getName());
+        if (isSame.isPresent()) {
+            if (isSame.get().getCityId() != newCity.getCityId()) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "City the name of " + newCity.getName() + " already exists.");
+                return "redirect:" + referer;
+            }
+        }
+        cRepository.findById(id)
+                .map(city -> {
+                    city.setName(newCity.getName());
+                    city.setDescription(newCity.getDescription());
+                    city.setImage(newCity.getImage());
+                    return cRepository.save(city);
+                });
+
+        return "redirect:/region/" + newCity.getRegion().getRegionId();
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

@@ -21,7 +21,7 @@
 
     <h1>Edit Region</h1>
     <div>
-        <form th:object="${region}" th:action="@{../save/{id}(id=2)}" method="post">
+        <form th:object="${region}" th:action="@{../save/{id}(id=${region.regionId})}" method="post">
             <input type="hidden" name="_method" value="put"/>
             <p>
                 <label for="RegionId"></label>
