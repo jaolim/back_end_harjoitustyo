@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.harjoitustyo.Views;
 import com.example.harjoitustyo.Exception.CustomBadRequestException;
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
+import com.example.harjoitustyo.domain.AppUser;
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.RegionRepository;
@@ -67,6 +68,10 @@ public class CityRestController {
         } else if (city.getRegion() == null || !rRepository.findById(city.getRegion().getRegionId()).isPresent()) {
             throw new CustomBadRequestException("Wrong or missing Region Id");
         }
+        Optional<City> isSame = cRepository.findByName(city.getName());
+        if (isSame.isPresent()) {
+            throw new CustomBadRequestException("City name has to be unique");
+        }
         return cRepository.save(city);
     }
 
@@ -75,12 +80,16 @@ public class CityRestController {
     @PutMapping("/cities/{id}")
     public Optional<City> putCity(@RequestBody City newCity, @PathVariable Long id) {
         if (!cRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("City by id" + id + " does not exist");
+            throw new CustomNotFoundException("City by the id of " + id + " does not exist");
         } else if (newCity.getName() == null || newCity.getName().isEmpty()) {
             throw new CustomBadRequestException("City name cannot be empty");
         } else if (newCity.getRegion() == null
                 || !rRepository.findById(newCity.getRegion().getRegionId()).isPresent()) {
             throw new CustomBadRequestException("Wrong or missing Region Id");
+        }
+        Optional<City> isSame = cRepository.findByName(newCity.getName());
+        if (isSame.isPresent() && isSame.get().getCityId() != id) {
+            throw new CustomBadRequestException("City has to be unique");
         }
 
         return cRepository.findById(id)

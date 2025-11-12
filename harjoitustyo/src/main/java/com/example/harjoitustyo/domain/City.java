@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,6 +38,7 @@ public class City {
 
     @JsonView(Views.Public.class)
     @NotBlank(message = "City name is required")
+    @Column(nullable = false, unique = true)
     private String name;
 
     @JsonView(Views.Public.class)
