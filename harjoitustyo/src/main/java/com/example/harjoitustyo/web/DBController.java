@@ -39,7 +39,7 @@ public class DBController {
 
         @PreAuthorize("hasAuthority('ADMIN')")
         @GetMapping(value = "/db/delete")
-        public String deleteDB(Model model, HttpServletRequest request) {
+        public String clearDB(Model model, HttpServletRequest request) {
                 String referer = request.getHeader("Referer");
                 coRepository.deleteAll();
                 lRepository.deleteAll();

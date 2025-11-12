@@ -48,7 +48,7 @@ public class AppUserRestController {
     @JsonView(Views.Elevated.class)
     @GetMapping(value = "/appusers/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<AppUser> getAppUserById(@PathVariable Long id) {
+    public Optional<AppUser> getAppUser(@PathVariable Long id) {
         Optional<AppUser> appUser = rRepository.findById(id);
         if (!appUser.isPresent()) {
             throw new CustomNotFoundException("AppUser does not exist");
@@ -70,17 +70,6 @@ public class AppUserRestController {
             throw new CustomBadRequestException("AppUser passwordHash cannot be empty");
         }
         return rRepository.save(appUser);
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @JsonView(Views.Elevated.class)
-    @DeleteMapping("/appusers/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteAppUser(@PathVariable Long id) {
-        if (!rRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("AppUser by id " + id + " does not exist");
-        }
-        rRepository.deleteById(id);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -107,6 +96,17 @@ public class AppUserRestController {
                     return rRepository.save(appUser);
                 });
 
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @JsonView(Views.Elevated.class)
+    @DeleteMapping("/appusers/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAppUser(@PathVariable Long id) {
+        if (!rRepository.findById(id).isPresent()) {
+            throw new CustomNotFoundException("AppUser by id " + id + " does not exist");
+        }
+        rRepository.deleteById(id);
     }
 
 }

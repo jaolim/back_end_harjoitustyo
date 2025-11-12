@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.LocationRepository;
@@ -32,6 +30,23 @@ public class CityController {
         this.cRepository = cRepository;
         this.lRepository = lRepository;
         this.rRepository = rRepository;
+    }
+
+    @GetMapping(value = { "/city/{id}" })
+    public String showCity(@PathVariable("id") Long cityId, Model model, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        Optional<City> city = cRepository.findById(cityId);
+        if (!city.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "City by the id of " + cityId + " does not exist.");
+            return "redirect:" + referer;
+        }
+        Region region = city.get().getRegion();
+        model.addAttribute("city", city.get());
+        model.addAttribute("region", region);
+        model.addAttribute("locations", lRepository.findByCity(city.get()));
+        return "city";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -86,26 +101,9 @@ public class CityController {
         return "redirect:../region/" + city.getRegion().getRegionId();
     }
 
-    @GetMapping(value = { "/city/{id}" })
-    public String getCity(@PathVariable("id") Long cityId, Model model, RedirectAttributes redirectAttributes,
-            HttpServletRequest request) {
-        String referer = request.getHeader("Referer");
-        Optional<City> city = cRepository.findById(cityId);
-        if (!city.isPresent()) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "City by the id of " + cityId + " does not exist.");
-            return "redirect:" + referer;
-        }
-        Region region = city.get().getRegion();
-        model.addAttribute("city", city.get());
-        model.addAttribute("region", region);
-        model.addAttribute("locations", lRepository.findByCity(city.get()));
-        return "city";
-    }
-
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/city/save/{id}")
-    public String putRegion(@PathVariable Long id, City newCity,
+    public String saveEditedCity(@PathVariable Long id, City newCity,
             RedirectAttributes redirectAttributes, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         if (newCity.getName().isEmpty()) {
@@ -113,7 +111,7 @@ public class CityController {
                     "City name is required.");
             return "redirect:" + referer;
         }
-        if (!rRepository.findById(id).isPresent()) {
+        if (!cRepository.findById(id).isPresent()) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "City by the id of " + id + " does not exist");
             return "redirect:/";
@@ -139,7 +137,7 @@ public class CityController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/city/delete/{id}")
-    public String deleteCity(@PathVariable("id") Long cityId, Model model, HttpServletRequest request) {
+    public String removeCity(@PathVariable("id") Long cityId, Model model, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         cRepository.deleteById(cityId);
         return "redirect:" + referer;

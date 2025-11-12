@@ -47,7 +47,7 @@ public class LocationRestController {
     @JsonView(Views.Public.class)
     @GetMapping(value = "/locations/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Location> getLocationById(@PathVariable Long id) {
+    public Optional<Location> getLocation(@PathVariable Long id) {
         Optional<Location> location = lRepository.findById(id);
         if (!location.isPresent()) {
             throw new CustomNotFoundException("Location does not exist");
@@ -67,16 +67,6 @@ public class LocationRestController {
             throw new CustomBadRequestException("Wrong or missing City Id");
         }
         return lRepository.save(location);
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @JsonView(Views.Public.class)
-    @DeleteMapping("/locations/{id}")
-    public void deleteLocation(@PathVariable Long id) {
-        if (!lRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("Location by id " + id + " does not exist");
-        }
-        lRepository.deleteById(id);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -102,6 +92,16 @@ public class LocationRestController {
                     return lRepository.save(location);
                 });
 
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @JsonView(Views.Public.class)
+    @DeleteMapping("/locations/{id}")
+    public void deleteLocation(@PathVariable Long id) {
+        if (!lRepository.findById(id).isPresent()) {
+            throw new CustomNotFoundException("Location by id " + id + " does not exist");
+        }
+        lRepository.deleteById(id);
     }
 
 }

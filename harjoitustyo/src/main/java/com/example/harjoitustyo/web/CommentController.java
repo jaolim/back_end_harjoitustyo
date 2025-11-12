@@ -2,7 +2,6 @@ package com.example.harjoitustyo.web;
 
 import java.util.Optional;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,7 +41,7 @@ public class CommentController {
     }
 
     @GetMapping(value = { "/comment/edit/{id}" })
-    public String getLocation(@PathVariable("id") Long commentId, Model model, RedirectAttributes redirectAttributes,
+    public String showLocation(@PathVariable("id") Long commentId, Model model, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         Optional<Comment> comment = coRepository.findById(commentId);
@@ -130,7 +129,7 @@ public class CommentController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/location/{id}/comment/save/{commentId}")
-    public String putLocation(@PathVariable("id") Long locationId, @PathVariable("commentId") Long commentId,
+    public String saveEditedComment(@PathVariable("id") Long locationId, @PathVariable("commentId") Long commentId,
             Comment newComment,
             RedirectAttributes redirectAttributes, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
@@ -162,7 +161,7 @@ public class CommentController {
 
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     @GetMapping(value = "/comment/delete/{id}")
-    public String deleteComment(@PathVariable("id") Long commentId, HttpServletRequest request,
+    public String removeComment(@PathVariable("id") Long commentId, HttpServletRequest request,
             Authentication authentication, RedirectAttributes redirectAttributes) {
         String username = authentication.getName();
         String referer = request.getHeader("Referer");

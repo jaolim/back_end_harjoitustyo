@@ -54,7 +54,7 @@ public class CommentRestController {
     @JsonView(Views.Public.class)
     @GetMapping(value = "/comments/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Comment> getCommentById(@PathVariable Long id) {
+    public Optional<Comment> getComment(@PathVariable Long id) {
         Optional<Comment> comment = coRepository.findById(id);
         if (!comment.isPresent()) {
             throw new CustomNotFoundException("Comment does not exist");
@@ -80,22 +80,6 @@ public class CommentRestController {
             throw new CustomBadRequestException("Wrong or missing Location Id");
         }
         return coRepository.save(comment);
-    }
-
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    @JsonView(Views.Public.class)
-    @DeleteMapping("/comments/{id}")
-    public void deleteComment(@PathVariable Long id, Authentication authentication) {
-        Optional<Comment> comment = coRepository.findById(id);
-        String currentUser = authentication.getName();
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
-        if (!comment.isPresent()) {
-            throw new CustomNotFoundException("Comment by the id " + id + " does not exist");
-        } else if (!comment.get().getAppUser().getUsername().equals(currentUser) && !isAdmin) {
-            throw new CustomForbiddenException("You do not have permissions to delete comment by the id of " + id);
-        }
-        coRepository.deleteById(id);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
@@ -129,5 +113,21 @@ public class CommentRestController {
             return coRepository.save(com);
         });
 
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @JsonView(Views.Public.class)
+    @DeleteMapping("/comments/{id}")
+    public void deleteComment(@PathVariable Long id, Authentication authentication) {
+        Optional<Comment> comment = coRepository.findById(id);
+        String currentUser = authentication.getName();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+        if (!comment.isPresent()) {
+            throw new CustomNotFoundException("Comment by the id " + id + " does not exist");
+        } else if (!comment.get().getAppUser().getUsername().equals(currentUser) && !isAdmin) {
+            throw new CustomForbiddenException("You do not have permissions to delete comment by the id of " + id);
+        }
+        coRepository.deleteById(id);
     }
 }

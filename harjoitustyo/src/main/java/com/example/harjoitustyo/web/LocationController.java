@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import com.example.harjoitustyo.Exception.CustomNotFoundException;
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.Location;
@@ -20,7 +19,6 @@ import com.example.harjoitustyo.domain.Region;
 import jakarta.servlet.http.HttpServletRequest;
 
 import com.example.harjoitustyo.domain.CommentRepository;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -35,6 +33,25 @@ public class LocationController {
         this.cRepository = cRepository;
         this.lRepository = lRepository;
         this.coRepository = coRepository;
+    }
+
+    @GetMapping(value = { "/location/{id}" })
+    public String showLocation(@PathVariable("id") Long locationId, Model model, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        Optional<Location> location = lRepository.findById(locationId);
+        if (!location.isPresent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Location by the id of " + locationId + " does not exist.");
+            return "redirect:" + referer;
+        }
+        City city = location.get().getCity();
+        Region region = city.getRegion();
+        model.addAttribute(location.get());
+        model.addAttribute("city", city);
+        model.addAttribute("region", region);
+        model.addAttribute("comments", coRepository.findByLocation(location.get()));
+        return "location";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -89,28 +106,9 @@ public class LocationController {
         return "redirect:../city/" + location.getCity().getCityId();
     }
 
-    @GetMapping(value = { "/location/{id}" })
-    public String getLocation(@PathVariable("id") Long locationId, Model model, RedirectAttributes redirectAttributes,
-            HttpServletRequest request) {
-        String referer = request.getHeader("Referer");
-        Optional<Location> location = lRepository.findById(locationId);
-        if (!location.isPresent()) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "Location by the id of " + locationId + " does not exist.");
-            return "redirect:" + referer;
-        }
-        City city = location.get().getCity();
-        Region region = city.getRegion();
-        model.addAttribute(location.get());
-        model.addAttribute("city", city);
-        model.addAttribute("region", region);
-        model.addAttribute("comments", coRepository.findByLocation(location.get()));
-        return "location";
-    }
-
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/location/save/{id}")
-    public String putLocation(@PathVariable Long id, Location newLocation,
+    public String saveEditedLocation(@PathVariable Long id, Location newLocation,
             RedirectAttributes redirectAttributes, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         if (newLocation.getName().isEmpty()) {
@@ -144,7 +142,7 @@ public class LocationController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(value = "/location/delete/{id}")
-    public String deleteLocation(@PathVariable("id") Long locationId, Model model, HttpServletRequest request) {
+    public String removeLocation(@PathVariable("id") Long locationId, Model model, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         lRepository.deleteById(locationId);
         return "redirect:" + referer;
