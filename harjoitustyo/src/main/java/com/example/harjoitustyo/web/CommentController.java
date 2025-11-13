@@ -72,10 +72,16 @@ public class CommentController {
                     "Location by the ID of " + id + " does not exist.");
             return "redirect:" + referer;
         }
-
+        Optional<Location> location = lRepository.findById(id);
+        if (!location.isPresent()) {
+                    redirectAttributes.addFlashAttribute("errorMessage",
+                    "Location by the ID of " + id + " does not exist.");
+            return "redirect:" + referer;
+        }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Optional<AppUser> appUser = auRepository.findByUsername(username);
+        model.addAttribute("location", location.get());
         model.addAttribute("appUser", appUser.get());
         model.addAttribute("locations", lRepository.findAll());
         model.addAttribute("comment", new Comment());
@@ -124,7 +130,7 @@ public class CommentController {
             return "redirect:" + referer;
         }
         coRepository.save(comment);
-        return "redirect:/";
+        return "redirect:/location/" + id;
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -146,7 +152,7 @@ public class CommentController {
         if (!coRepository.findById(commentId).isPresent()) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Comment by the id of " + commentId + " does not exist");
-            return "redirect:/";
+            return "redirect:/location" + locationId;
         }
 
         coRepository.findById(commentId)

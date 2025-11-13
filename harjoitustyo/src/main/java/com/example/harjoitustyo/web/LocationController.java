@@ -116,10 +116,10 @@ public class LocationController {
                     "Location name is required.");
             return "redirect:" + referer;
         }
-        if (!cRepository.findById(id).isPresent()) {
+        if (!lRepository.findById(id).isPresent()) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Location by the id of " + id + " does not exist");
-            return "redirect:/";
+            return "redirect:" + referer;
         }
         Optional<Location> isSame = lRepository.findByName(newLocation.getName());
         if (isSame.isPresent()) {
