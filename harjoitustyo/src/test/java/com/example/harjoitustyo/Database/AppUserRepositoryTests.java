@@ -13,8 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.harjoitustyo.HarjoitustyoApplication;
 import com.example.harjoitustyo.domain.AppUser;
 import com.example.harjoitustyo.domain.AppUserRepository;
-import com.example.harjoitustyo.domain.Region;
-import com.example.harjoitustyo.domain.RegionRepository;
 
 import jakarta.validation.ConstraintViolationException;
 
