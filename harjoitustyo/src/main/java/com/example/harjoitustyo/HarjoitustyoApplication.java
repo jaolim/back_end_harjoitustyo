@@ -50,12 +50,21 @@ public class HarjoitustyoApplication {
 						"Finland’s capital, combining coastal beauty, culture, and international life.",
 						rUusimaa,
 						"https://upload.wikimedia.org/wikipedia/commons/c/c4/Helsinki.vaakuna.svg");
-				Location location1 = new Location("Central Railway Station", "The main railway station.", cHelsinki,
+				Location location1 = new Location("Central Railway Station", "The main railway station.", cHelsinki, "00100 Helsinki",
 						"https://upload.wikimedia.org/wikipedia/commons/e/ee/Helsinki_Central_railway_station_in_Finland%2C_2021_July.jpg");
 				Location location2 = new Location(
 						"Suomenlinna Fortress",
 						"A historic sea fortress reachable by ferry, popular for walks and picnics.",
-						cHelsinki);
+						cHelsinki, "Suomenlinna, 00190 Helsinki");
+				Location location3 = new Location(
+						"Helsinki Cathedral",
+						"An iconic white cathedral overlooking Senate Square, a landmark of the city.",
+						cHelsinki, "Unioninkatu 29, 00170 Helsinki");
+				Location location4 = new Location("Esplanadi Park", "A beautiful green park in central Helsinki.",
+						cHelsinki, "Pohjoisesplanadi, 00130 Helsinki");
+				Location location5 = new Location("Kamppi Chapel",
+						"A wooden chapel offering silence in the busy city center.", cHelsinki,
+						"Simonkatu 7, 00100 Helsinki");
 
 				AppUser appUser1 = new AppUser("admin", "$2a$10$zNXa3MgyyUslVl.jL8950eGswQKEBKFVkSXlvghOPigjUcKXsasbK",
 						"ADMIN",
@@ -106,6 +115,10 @@ public class HarjoitustyoApplication {
 				cRepository.save(cHelsinki);
 				lRepository.save(location1);
 				lRepository.save(location2);
+				lRepository.save(location3);
+				lRepository.save(location4);
+				lRepository.save(location5);
+
 				coRepository.save(comment1);
 				coRepository.save(comment2);
 				coRepository.save(comment3);

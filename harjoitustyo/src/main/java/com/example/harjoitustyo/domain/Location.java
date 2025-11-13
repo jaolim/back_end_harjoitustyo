@@ -59,11 +59,19 @@ public class Location {
         this.city = city;
     }
 
-    public Location(String name, String description, City city, String image) {
+    public Location(String name, String description, City city, String address) {
+        this.name = name;
+        this.description = description;
+        this.city = city;
+        this.address = address;
+    }
+
+        public Location(String name, String description, City city, String address, String image) {
         this.name = name;
         this.description = description;
         this.image = image;
         this.city = city;
+        this.address = address;
     }
 
     public void setName(String name) {
