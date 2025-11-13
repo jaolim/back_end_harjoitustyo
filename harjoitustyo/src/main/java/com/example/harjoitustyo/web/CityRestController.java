@@ -22,6 +22,8 @@ import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.RegionRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @CrossOrigin(originPatterns = "*")
@@ -59,37 +61,50 @@ public class CityRestController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @PostMapping("/cities")
-    public City postCity(@RequestBody City city) {
+    public City postCity(@Valid @RequestBody City city) {
         if (city.getCityId() != null) {
             throw new CustomBadRequestException("Do not include cityId");
-        } else if (city.getName() == null || city.getName().isEmpty()) {
-            throw new CustomBadRequestException("City name cannot be empty");
-        } else if (city.getRegion() == null || !rRepository.findById(city.getRegion().getRegionId()).isPresent()) {
-            throw new CustomBadRequestException("Wrong or missing Region Id");
         }
+
         Optional<City> isSame = cRepository.findByName(city.getName());
         if (isSame.isPresent()) {
             throw new CustomBadRequestException("City name has to be unique");
         }
+
+        // Obsolete manual validation, now handled by @Valid implementation instead
+        /*
+         * if (city.getName() == null || city.getName().isEmpty()) {
+         * throw new CustomBadRequestException("City name cannot be empty");
+         * } else if (city.getRegion() == null ||
+         * !rRepository.findById(city.getRegion().getRegionId()).isPresent()) {
+         * throw new CustomBadRequestException("Wrong or missing Region Id");
+         * }
+         */
         return cRepository.save(city);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @PutMapping("/cities/{id}")
-    public Optional<City> putCity(@RequestBody City newCity, @PathVariable Long id) {
+    public Optional<City> putCity(@Valid @RequestBody City newCity, @PathVariable Long id) {
         if (!cRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("City by the id of " + id + " does not exist");
-        } else if (newCity.getName() == null || newCity.getName().isEmpty()) {
-            throw new CustomBadRequestException("City name cannot be empty");
-        } else if (newCity.getRegion() == null
-                || !rRepository.findById(newCity.getRegion().getRegionId()).isPresent()) {
-            throw new CustomBadRequestException("Wrong or missing Region Id");
         }
+
         Optional<City> isSame = cRepository.findByName(newCity.getName());
         if (isSame.isPresent() && isSame.get().getCityId() != id) {
             throw new CustomBadRequestException("City name has to be unique");
         }
+
+        // Obsolete manual validation, now handled by @Valid implementation instead
+        /*
+         * if (newCity.getName() == null || newCity.getName().isEmpty()) {
+         * throw new CustomBadRequestException("City name cannot be empty");
+         * } else if (newCity.getRegion() == null
+         * || !rRepository.findById(newCity.getRegion().getRegionId()).isPresent()) {
+         * throw new CustomBadRequestException("Wrong or missing Region Id");
+         * }
+         */
 
         return cRepository.findById(id)
                 .map(city -> {
