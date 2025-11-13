@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.harjoitustyo.Views;
 import com.example.harjoitustyo.Exception.CustomBadRequestException;
 import com.example.harjoitustyo.Exception.CustomNotFoundException;
-import com.example.harjoitustyo.domain.AppUser;
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.RegionRepository;
