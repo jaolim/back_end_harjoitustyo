@@ -7,8 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.harjoitustyo.domain.AppUser;
 
+
 @SpringBootTest
-public class AppUserTest {
+public class AppUserTests {
 
         @Test
         public void shouldCreateNewAppUsers() {

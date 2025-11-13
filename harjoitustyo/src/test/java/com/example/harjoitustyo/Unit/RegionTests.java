@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.harjoitustyo.domain.Region;
 
 @SpringBootTest
-public class RegionTest {
+public class RegionTests {
 
     @Test
     public void shouldCreateNewRegions() {
