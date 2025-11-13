@@ -19,7 +19,8 @@
         </form>
     </div>
 
-    <h1>Add Comment</h1>
+    <h1>Edit commment for</h1>
+    <h1 th:text="${comment.location.name}"></h1>
 
     <div>
         <form th:object="${comment}" th:action="@{../save/{id}(id=${comment.commentId})}" method="post">
@@ -28,19 +29,15 @@
                 <input type="hidden" th:value="${appUser.appUserId}" name="appUser" />
             </p>
             <p>
+                <input type="hidden" th:value="*{location.locationId}" name="location" />
+            </p>
+            <p>
                 <input type="text" id="headline" th:field="*{headline}" />
                 <label for="CommentName">Comment Headline</label>
             </p>
             <p>
                 <input type="text" id="body" th:field="*{body}" />
                 <label for="CommentBody">Comment Body</label>
-            </p>
-            <p>
-                <select id="locations" th:field="*{location}" class="form-control" disabled>
-                    <option th:each="location: ${locations}" th:value="${location.locationId}"
-                        th:text="${location.name}">
-                    </option>
-                    <label for="locations">Locations</label>
             </p>
             <p>
                 <input class="btn btn-success" type="submit" value="Save"></input>
