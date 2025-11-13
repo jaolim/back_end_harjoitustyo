@@ -45,6 +45,12 @@ Käyttäjien oikeudet on jaettu kolmeen kategoriaan: `ADMIN`, `USER` ja `omistaj
 	- Lisää kommentti linkki: USER, ADMIN
 	- Editoi kommenttia linkki: omistaja, ADMIN
 	- Tuhoa kommentti: omistaja, ADMIN
+	
+#### Alustava tietokantasuunnittelu
+
+*Suunnitelma tehty pohjaksi ohjelman rakenteelle, mutta sitä ei ole päivitetty ajankohtaiseksi.*
+
+![Tietokantamalli](/resources/DB_design.png)
 
 ## REST dokumentaatio
 
