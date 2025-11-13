@@ -33,18 +33,38 @@ Käyttäjien oikeudet on jaettu kolmeen kategoriaan: `ADMIN`, `USER` ja `omistaj
 #### Kaupungit tietyssä maakunnassa - /region/{id}
 
 	- Valitse kaupunki linkki
+	- Lisää kaupunki linkki: ADMIN
+	- Muokkaa kaupunkia linkki: ADMIN
 	- Tuhoa kaupunki: ADMIN
+
+#### Lisää kaupunki(ADMIN) - /city/add
+
+	- Täytä kaupungin tiedot ja tallenna
+	
+#### Muokkaa kaupunkia(ADMIN) - /city/{id}
+
+	- Täytä kaupungin tiedot ja tallenna
 	
 #### Paikat tietyssä kaupungissa - /city/{id}
 
 	- Valitse paikka linkki
+	- Lisää paikka linkki: ADMIN
+	- Muokkaa paikkaa linkki: ADMIN
 	- Tuhoa paikka: ADMIN
 	
-#### Kommentit tietystä paikasta
+#### Kommentit tietystä paikasta - /location/{id}
 
 	- Lisää kommentti linkki: USER, ADMIN
 	- Editoi kommenttia linkki: omistaja, ADMIN
 	- Tuhoa kommentti: omistaja, ADMIN
+	
+#### Lisää kommentti(ADMIN, USER) - /location/{locationId}/comment/add
+
+	- Täytä kommentin tiedot ja tallenna
+	
+#### Muokkaa kommenttia(omistaja) - /location/{locationId}/comment/{commentId}
+
+	- Täytä kommentin tiedot ja tallenna
 	
 #### Alustava tietokantasuunnittelu
 
