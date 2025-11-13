@@ -74,7 +74,7 @@ public class LocationRestController {
     @PutMapping("/locations/{id}")
     public Optional<Location> putLocation(@RequestBody Location newLocation, @PathVariable Long id) {
         if (!lRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("Location by id" + id + " does not exist");
+            throw new CustomNotFoundException("Location by the id of " + id + " does not exist");
         } else if (newLocation.getName() == null || newLocation.getName().isEmpty()) {
             throw new CustomBadRequestException("Location name cannot be empty");
         } else if (newLocation.getCity() == null

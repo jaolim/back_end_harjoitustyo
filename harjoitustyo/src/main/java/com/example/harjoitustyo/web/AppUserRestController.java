@@ -29,10 +29,10 @@ import com.example.harjoitustyo.domain.AppUser;
 @RestController
 public class AppUserRestController {
 
-    private AppUserRepository rRepository;
+    private AppUserRepository auRepository;
 
-    public AppUserRestController(AppUserRepository rRepository) {
-        this.rRepository = rRepository;
+    public AppUserRestController(AppUserRepository auRepository) {
+        this.auRepository = auRepository;
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -40,7 +40,7 @@ public class AppUserRestController {
     @GetMapping(value = "/appusers")
     @ResponseStatus(HttpStatus.OK)
     public List<AppUser> getAllAppUsers() {
-        return (List<AppUser>) rRepository.findAll();
+        return (List<AppUser>) auRepository.findAll();
 
     }
 
@@ -49,7 +49,7 @@ public class AppUserRestController {
     @GetMapping(value = "/appusers/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<AppUser> getAppUser(@PathVariable Long id) {
-        Optional<AppUser> appUser = rRepository.findById(id);
+        Optional<AppUser> appUser = auRepository.findById(id);
         if (!appUser.isPresent()) {
             throw new CustomNotFoundException("AppUser does not exist");
         }
@@ -63,20 +63,24 @@ public class AppUserRestController {
         if (appUser.getAppUserId() != null) {
             throw new CustomBadRequestException("Do not include appUserId");
         } else if (appUser.getUsername() == null || appUser.getUsername().isEmpty()) {
-            throw new CustomBadRequestException("AppUser name cannot be empty");
+            throw new CustomBadRequestException("AppUser username cannot be empty");
         } else if (appUser.getUserRole() == null || appUser.getUserRole().isEmpty()) {
             throw new CustomBadRequestException("AppUser role cannot be empty");
         } else if (appUser.getPasswordHash() == null || appUser.getPasswordHash().isEmpty()) {
             throw new CustomBadRequestException("AppUser passwordHash cannot be empty");
         }
-        return rRepository.save(appUser);
+        Optional<AppUser> isSame = auRepository.findByUsername(appUser.getUsername());
+        if (isSame.isPresent()) {
+            throw new CustomBadRequestException("AppUser username has to be unique");
+        }
+        return auRepository.save(appUser);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Internal.class)
     @PutMapping("/appusers/{id}")
     public Optional<AppUser> putAppUser(@RequestBody AppUser newAppUser, @PathVariable Long id) {
-        if (!rRepository.findById(id).isPresent()) {
+        if (!auRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("AppUser by id" + id + " does not exist");
         } else if (newAppUser.getUsername() == null || newAppUser.getUsername().isEmpty()) {
             throw new CustomBadRequestException("AppUser name cannot be empty");
@@ -85,15 +89,19 @@ public class AppUserRestController {
         } else if (newAppUser.getPasswordHash() == null || newAppUser.getPasswordHash().isEmpty()) {
             throw new CustomBadRequestException("AppUser passwordHash cannot be empty");
         }
+        Optional<AppUser> isSame = auRepository.findByUsername(newAppUser.getUsername());
+        if (isSame.isPresent() && isSame.get().getAppUserId() != id) {
+            throw new CustomBadRequestException("AppUser username has to be unique");
+        }
 
-        return rRepository.findById(id)
+        return auRepository.findById(id)
                 .map(appUser -> {
                     appUser.setUsername(newAppUser.getUsername());
                     appUser.setFirstname(newAppUser.getFirstname());
                     appUser.setLastname(newAppUser.getLastname());
                     appUser.setPasswordHash(newAppUser.getPasswordHash());
                     appUser.setUserRole(newAppUser.getUserRole());
-                    return rRepository.save(appUser);
+                    return auRepository.save(appUser);
                 });
 
     }
@@ -103,10 +111,10 @@ public class AppUserRestController {
     @DeleteMapping("/appusers/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteAppUser(@PathVariable Long id) {
-        if (!rRepository.findById(id).isPresent()) {
+        if (!auRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("AppUser by id " + id + " does not exist");
         }
-        rRepository.deleteById(id);
+        auRepository.deleteById(id);
     }
 
 }

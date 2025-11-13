@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Region {
@@ -25,12 +26,13 @@ public class Region {
 
     @JsonView(Views.Public.class)
     @JsonIgnoreProperties("region")
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval =  true, mappedBy = "region")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "region")
     private List<City> cities;
 
     @Column(nullable = false, unique = true)
     @JsonView(Views.Public.class)
     @NotBlank(message = "Region name is required")
+    @NotNull(message = "Region name is required")
     private String name;
 
     @JsonView(Views.Public.class)
@@ -42,6 +44,11 @@ public class Region {
 
     public Region(String name) {
         this.name = name;
+    }
+
+    public Region(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
     public Region(String name, String description, String image) {

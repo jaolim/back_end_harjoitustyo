@@ -15,6 +15,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class City {
@@ -37,13 +40,19 @@ public class City {
 
     @JsonView(Views.Public.class)
     @NotBlank(message = "City name is required")
+    @NotNull(message = "City name is required")
+    @Size(max = 50)
     private String name;
 
     @JsonView(Views.Public.class)
+    @Positive
     private int population;
+
     @JsonView(Views.Public.class)
+    @Positive
     private double area;
     @JsonView(Views.Public.class)
+    @Size(max = 500)
     private String description, image;
 
     public City() {
