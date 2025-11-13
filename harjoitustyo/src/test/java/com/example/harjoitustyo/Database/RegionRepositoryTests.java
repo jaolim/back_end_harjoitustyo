@@ -31,7 +31,7 @@ public class RegionRepositoryTests {
 
     @AfterEach
     public void cleanup() {
-        //regionRepository.deleteAll();
+        regionRepository.deleteAll();
     }
 
     @Test

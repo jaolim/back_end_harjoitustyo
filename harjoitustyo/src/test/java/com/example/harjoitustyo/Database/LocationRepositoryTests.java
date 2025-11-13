@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,13 +13,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
+import com.example.harjoitustyo.domain.Location;
+import com.example.harjoitustyo.domain.LocationRepository;
 import com.example.harjoitustyo.domain.Region;
 import com.example.harjoitustyo.domain.RegionRepository;
 
 import jakarta.validation.ConstraintViolationException;
 
 @SpringBootTest
-public class CityRepositoryTests {
+public class LocationRepositoryTests {
 
     @Autowired
     private RegionRepository regionRepository;
@@ -28,37 +29,44 @@ public class CityRepositoryTests {
     @Autowired
     private CityRepository cityRepository;
 
+    @Autowired
+    private LocationRepository locationRepository;
+
     @BeforeEach
     public void setup() {
         Region region = new Region("testRegion",
                 "testDescription",
                 "testImage");
-
+        City city = new City("testCity", 1, 1, region);
         regionRepository.save(region);
+        cityRepository.save(city);
     }
 
     @AfterEach
     public void cleanup() {
         cityRepository.deleteAll();
         regionRepository.deleteAll();
+        locationRepository.deleteAll();
     }
 
     @Test
-    public void shouldSaveCity() {
+    public void shouldSaveLocation() {
 
         Optional<Region> region = regionRepository.findByName("testRegion");
 
         assertTrue(region.isPresent());
 
-        City city = new City("testCity", 1, 1,region.get());
+        Optional<City> city = cityRepository.findByName("testCity");
 
-        cityRepository.save(city);
+        Location location = new Location("testLocation", city.get());
 
-        Optional<City> cityFetch = cityRepository.findByName("testCity");
+        locationRepository.save(location);
 
-        assertTrue(cityFetch.isPresent());
+        Optional<Location> locationFetch = locationRepository.findByName("testLocation");
 
-        assertTrue(cityFetch.get().getRegion().getName().equals("testRegion"));
+        assertTrue(locationFetch.isPresent());
+
+        assertTrue(locationFetch.get().getCity().getRegion().getName().equals("testRegion"));
 
     }
 
@@ -67,13 +75,16 @@ public class CityRepositoryTests {
 
         Optional<Region> region = regionRepository.findByName("testRegion");
 
+        assertTrue(region.isPresent());
 
-        City city = new City("testCity", 0, 1, region.get());
+        Optional<City> city = cityRepository.findByName("testCity");
 
+        Location location = new Location("", city.get());
 
         assertThrows(ConstraintViolationException.class, () -> {
-            cityRepository.save(city);
+            locationRepository.save(location);
         });
-        
+
     }
+     
 }
