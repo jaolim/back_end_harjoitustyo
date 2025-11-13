@@ -25,6 +25,7 @@
                 <th>Region Name</th>
                 <th>Region Description</th>
                 <th>Region Coat of Arms</th>
+                <td><a class="btn btn-info" th:href="@{/}">Regions</a></td>
                 <th sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/region/add}">Add New
                         Region</a></th>
             </tr>
@@ -41,6 +42,7 @@
                 <th>City Population</th>
                 <th>City Area km²</th>
                 <th>City Coat of Arms</th>
+                <td><a class="btn btn-info" th:text="${region.name}" th:href="@{/region/{id}(id=${region.regionId})}">Region Name</a></td>
                 <th sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/city/add}">Add New
                         City</a></th>
             </tr>
