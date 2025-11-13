@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +15,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class City {
@@ -38,14 +40,19 @@ public class City {
 
     @JsonView(Views.Public.class)
     @NotBlank(message = "City name is required")
-    @Column(nullable = false, unique = true)
+    @NotNull(message = "City name is required")
+    @Size(max = 50)
     private String name;
 
     @JsonView(Views.Public.class)
+    @Positive
     private int population;
+
     @JsonView(Views.Public.class)
+    @Positive
     private double area;
     @JsonView(Views.Public.class)
+    @Size(max = 500)
     private String description, image;
 
     public City() {

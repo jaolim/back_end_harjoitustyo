@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Region {
@@ -31,6 +32,7 @@ public class Region {
     @Column(nullable = false, unique = true)
     @JsonView(Views.Public.class)
     @NotBlank(message = "Region name is required")
+    @NotNull(message = "Region name is required")
     private String name;
 
     @JsonView(Views.Public.class)

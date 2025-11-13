@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Location {
@@ -26,6 +27,7 @@ public class Location {
 
     @JsonView(Views.Public.class)
     @NotBlank(message = "Region name is required")
+    @NotNull(message = "Region name is required")
     private String name;
 
     @JsonView(Views.Public.class)

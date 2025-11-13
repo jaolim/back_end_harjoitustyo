@@ -29,6 +29,13 @@ public class HarjoitustyoApplication {
 
 		return (args) -> {
 			if (!auRepository.existsByUsername("admin")) {
+
+				coRepository.deleteAll();
+				lRepository.deleteAll();
+				cRepository.deleteAll();
+				rRepository.deleteAll();
+				auRepository.deleteAll();
+
 				Region rUusimaa = new Region("Uusimaa",
 						"Finland’s most populous region, including Helsinki; urban, international, and coastal.",
 						"https://upload.wikimedia.org/wikipedia/commons/f/f9/Uusimaa.vaakuna.svg");
@@ -43,7 +50,8 @@ public class HarjoitustyoApplication {
 						"Finland’s capital, combining coastal beauty, culture, and international life.",
 						rUusimaa,
 						"https://upload.wikimedia.org/wikipedia/commons/c/c4/Helsinki.vaakuna.svg");
-				Location location1 = new Location("Central Railway Station", "The main railway station.", cHelsinki, "https://upload.wikimedia.org/wikipedia/commons/e/ee/Helsinki_Central_railway_station_in_Finland%2C_2021_July.jpg");
+				Location location1 = new Location("Central Railway Station", "The main railway station.", cHelsinki,
+						"https://upload.wikimedia.org/wikipedia/commons/e/ee/Helsinki_Central_railway_station_in_Finland%2C_2021_July.jpg");
 				Location location2 = new Location(
 						"Suomenlinna Fortress",
 						"A historic sea fortress reachable by ferry, popular for walks and picnics.",
@@ -87,17 +95,17 @@ public class HarjoitustyoApplication {
 						location2,
 						appUser2);
 
+				auRepository.save(appUser1);
+				auRepository.save(appUser2);
+				auRepository.save(appUser3);
+				auRepository.save(appUser4);
+				auRepository.save(appUser5);
 				rRepository.save(rPirkanmaa);
 				rRepository.save(rUusimaa);
 				cRepository.save(cAkaa);
 				cRepository.save(cHelsinki);
 				lRepository.save(location1);
 				lRepository.save(location2);
-				auRepository.save(appUser1);
-				auRepository.save(appUser2);
-				auRepository.save(appUser3);
-				auRepository.save(appUser4);
-				auRepository.save(appUser5);
 				coRepository.save(comment1);
 				coRepository.save(comment2);
 				coRepository.save(comment3);

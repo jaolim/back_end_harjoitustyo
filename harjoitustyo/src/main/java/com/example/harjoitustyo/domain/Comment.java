@@ -11,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Comment {
@@ -34,10 +36,14 @@ public class Comment {
 
     @JsonView(Views.Public.class)
     @NotBlank(message = "Comment headline is required")
+    @NotNull
+    @Size(max = 30)
     private String headline;
 
     @JsonView(Views.Public.class)
-    @NotBlank(message = "Commend body is required")
+    @NotBlank(message = "Comment body is required")
+    @NotNull(message = "Comment body is required")
+    @Size(max = 500)
     private String body;
 
     public Comment() {

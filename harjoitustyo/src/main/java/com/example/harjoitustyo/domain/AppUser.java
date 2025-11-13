@@ -7,13 +7,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class AppUser {
@@ -30,20 +31,26 @@ public class AppUser {
 
     @JsonView(Views.Public.class)
     @NotBlank(message = "Username cannot be empty")
-    @Column(nullable = false, unique = true)
+    @NotNull(message = "Username cannot be empty")
+    @Size(max = 20)
     private String username;
 
+    @NotBlank(message = "Password is required")
+    @NotNull(message = "Password is required")
     @JsonView(Views.Internal.class)
     private String passwordHash;
 
+    @Size(max = 50)
     @JsonView(Views.Elevated.class)
     private String firstname;
 
+    @Size(max = 50)
     @JsonView(Views.Elevated.class)
     private String lastname;
 
     @JsonView(Views.Elevated.class)
     @NotBlank
+    @Size(max = 20)
     private String userRole;
 
     public AppUser() {
