@@ -74,7 +74,7 @@ public class RegionRestController {
     @PutMapping("/regions/{id}")
     public Optional<Region> putRegion(@RequestBody Region newRegion, @PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("Region by id" + id + " does not exist");
+            throw new CustomNotFoundException("Region by the id of " + id + " does not exist");
         } else if (newRegion.getName() == null || newRegion.getName().isEmpty()) {
             throw new CustomBadRequestException("Region name cannot be empty");
         }
@@ -98,7 +98,7 @@ public class RegionRestController {
     @DeleteMapping("/regions/{id}")
     public void deleteRegion(@PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("Region by id " + id + " does not exist");
+            throw new CustomNotFoundException("Region by the id of " + id + " does not exist");
         }
         rRepository.deleteById(id);
     }
