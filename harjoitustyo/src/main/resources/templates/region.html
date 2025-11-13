@@ -25,6 +25,7 @@
                 <th>Region Name</th>
                 <th>Region Description</th>
                 <th>Region Coat of Arms</th>
+                <td><a class="btn btn-info" th:href="@{/}">Regions</a></td>
                 <th sec:authorize="hasAuthority('ADMIN')"><a class="btn btn-info" th:href="@{/region/add}">Add New
                         Region</a></th>
             </tr>
