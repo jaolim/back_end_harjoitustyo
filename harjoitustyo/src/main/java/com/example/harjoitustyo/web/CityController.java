@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.harjoitustyo.Exception.CustomBadRequestException;
 import com.example.harjoitustyo.domain.City;
 import com.example.harjoitustyo.domain.CityRepository;
 import com.example.harjoitustyo.domain.LocationRepository;
@@ -97,6 +98,17 @@ public class CityController {
                 return "redirect:" + referer;
             }
         }
+        try {
+            if (city.getPopulation() <= 0 || city.getArea() <= 0) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Population has to be a positive integer and Area has to be a positive number");
+                return "redirect:" + referer;
+            }
+        } catch (NumberFormatException e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Population has to be a positive integer and Area has to be a positive number");
+            return "redirect:" + referer;
+        }
         cRepository.save(city);
         return "redirect:../region/" + city.getRegion().getRegionId();
     }
@@ -123,6 +135,18 @@ public class CityController {
                         "City the name of " + newCity.getName() + " already exists.");
                 return "redirect:" + referer;
             }
+        }
+        try {
+            if (newCity.getPopulation() <= 0 || newCity.getArea() <= 0) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Population has to be a positive integer and Area has to be a positive number");
+                return "redirect:" + referer;
+            }
+        } catch (NumberFormatException e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Population has to be a positive integer and Area has to be a positive number");
+            return "redirect:" + referer;
+
         }
         cRepository.findById(id)
                 .map(city -> {
