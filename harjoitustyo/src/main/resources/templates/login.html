@@ -15,7 +15,7 @@
     <i sec:authorize="isAuthenticated()">User: <span sec:authentication="name"></span></i>
     <div>
         <div class="alert alert-danger" th:if="${param.error}">
-            Invalid username and password.
+            Invalid username or password.
         </div>
         <div class="alert alert-warning" th:if="${param.logout}">
             You have been logged out.

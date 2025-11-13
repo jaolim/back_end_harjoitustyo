@@ -59,8 +59,10 @@ public class City {
 
     }
 
-    public City(String name, Region region) {
+    public City(String name, int population, double area, Region region) {
         this.name = name;
+        this.population = population;
+        this.area = area;
         this.region = region;
     }
 
