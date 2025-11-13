@@ -23,6 +23,8 @@ import com.example.harjoitustyo.domain.Location;
 import com.example.harjoitustyo.domain.LocationRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import jakarta.validation.Valid;
+
 @CrossOrigin(originPatterns = "*")
 @RestController
 public class LocationRestController {
@@ -58,29 +60,39 @@ public class LocationRestController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Public.class)
     @PostMapping("/locations")
-    public Location postLocation(@RequestBody Location location) {
+    public Location postLocation(@Valid @RequestBody Location location) {
         if (location.getLocationId() != null) {
             throw new CustomBadRequestException("Do not include locationId");
-        } else if (location.getName() == null || location.getName().isEmpty()) {
-            throw new CustomBadRequestException("Location name cannot be empty");
         } else if (location.getCity() == null || !cRepository.findById(location.getCity().getCityId()).isPresent()) {
             throw new CustomBadRequestException("Wrong or missing City Id");
         }
+
+        // Obsolete manual validation, now handled by @Valid implementation instead
+        /*
+         * if (location.getName() == null || location.getName().isEmpty()) {
+         * throw new CustomBadRequestException("Location name cannot be empty");
+         * }
+         */
         return lRepository.save(location);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Public.class)
     @PutMapping("/locations/{id}")
-    public Optional<Location> putLocation(@RequestBody Location newLocation, @PathVariable Long id) {
+    public Optional<Location> putLocation(@Valid @RequestBody Location newLocation, @PathVariable Long id) {
         if (!lRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("Location by the id of " + id + " does not exist");
-        } else if (newLocation.getName() == null || newLocation.getName().isEmpty()) {
-            throw new CustomBadRequestException("Location name cannot be empty");
         } else if (newLocation.getCity() == null
                 || !cRepository.findById(newLocation.getCity().getCityId()).isPresent()) {
             throw new CustomBadRequestException("Wrong or missing City Id");
         }
+
+        // Obsolete manual validation, now handled by @Valid implementation instead
+        /*
+         * if (newLocation.getName() == null || newLocation.getName().isEmpty()) {
+         * throw new CustomBadRequestException("Location name cannot be empty");
+         * }
+         */
 
         return lRepository.findById(id)
                 .map(location -> {

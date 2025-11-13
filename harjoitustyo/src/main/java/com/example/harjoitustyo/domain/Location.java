@@ -26,8 +26,8 @@ public class Location {
     private Long locationId;
 
     @JsonView(Views.Public.class)
-    @NotBlank(message = "Region name is required")
-    @NotNull(message = "Region name is required")
+    @NotBlank(message = "Location name is required")
+    @NotNull(message = "Location name is required")
     private String name;
 
     @JsonView(Views.Public.class)

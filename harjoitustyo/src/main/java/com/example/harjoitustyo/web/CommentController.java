@@ -74,7 +74,7 @@ public class CommentController {
         }
         Optional<Location> location = lRepository.findById(id);
         if (!location.isPresent()) {
-                    redirectAttributes.addFlashAttribute("errorMessage",
+            redirectAttributes.addFlashAttribute("errorMessage",
                     "Location by the ID of " + id + " does not exist.");
             return "redirect:" + referer;
         }
@@ -88,12 +88,13 @@ public class CommentController {
         return "commentAdd";
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @GetMapping("/location/{id}/comment/edit/{commentId}")
     public String editComment(@PathVariable("id") Long locationId, @PathVariable("commentId") Long commentId,
             Model model, HttpServletRequest request,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, Authentication authentication) {
         String referer = request.getHeader("Referer");
+        String username = authentication.getName();
         if (!lRepository.existsById(locationId)) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Location by the ID of " + locationId + " does not exist.");
@@ -105,8 +106,10 @@ public class CommentController {
                     "Location by the ID of " + locationId + " does not exist.");
             return "redirect:" + referer;
         }
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
+        if (!comment.get().getAppUser().getUsername().equals(username)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "You can only edit your own comments");
+            return "redirect:/";
+        }
         Optional<AppUser> appUser = auRepository.findByUsername(username);
         model.addAttribute("appUser", appUser.get());
         model.addAttribute("locations", lRepository.findAll());
@@ -114,10 +117,10 @@ public class CommentController {
         return "commentEdit";
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @PostMapping("/location/{id}/comment/save")
     public String saveComment(@PathVariable("id") Long id, Comment comment, HttpServletRequest request,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, Authentication authentication) {
         String referer = request.getHeader("Referer");
         if (comment.getHeadline().isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage",
@@ -133,11 +136,11 @@ public class CommentController {
         return "redirect:/location/" + id;
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @PutMapping("/location/{id}/comment/save/{commentId}")
     public String saveEditedComment(@PathVariable("id") Long locationId, @PathVariable("commentId") Long commentId,
             Comment newComment,
-            RedirectAttributes redirectAttributes, HttpServletRequest request) {
+            RedirectAttributes redirectAttributes, HttpServletRequest request, Authentication authentication) {
         String referer = request.getHeader("Referer");
         if (newComment.getHeadline().isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage",

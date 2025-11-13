@@ -23,6 +23,9 @@ import com.example.harjoitustyo.domain.Comment;
 import com.example.harjoitustyo.domain.CommentRepository;
 import com.example.harjoitustyo.domain.LocationRepository;
 import com.fasterxml.jackson.annotation.JsonView;
+
+import jakarta.validation.Valid;
+
 import com.example.harjoitustyo.domain.AppUserRepository;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -65,13 +68,9 @@ public class CommentRestController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @JsonView(Views.Public.class)
     @PostMapping("/comments")
-    public Comment postComment(@RequestBody Comment comment) {
+    public Comment postComment(@Valid @RequestBody Comment comment) {
         if (comment.getCommentId() != null) {
             throw new CustomBadRequestException("Do not include commentId");
-        } else if (comment.getHeadline() == null || comment.getHeadline().isEmpty()) {
-            throw new CustomBadRequestException("Comment headline cannot be empty");
-        } else if (comment.getBody() == null || comment.getBody().isEmpty()) {
-            throw new CustomBadRequestException("Comment body cannot be empty");
         } else if (comment.getAppUser() == null
                 || !auRepository.findById(comment.getAppUser().getAppUserId()).isPresent()) {
             throw new CustomBadRequestException("Wrong or missing AppUser Id");
@@ -79,13 +78,23 @@ public class CommentRestController {
                 || !lRepository.findById(comment.getLocation().getLocationId()).isPresent()) {
             throw new CustomBadRequestException("Wrong or missing Location Id");
         }
+
+        // Obsolete manual validation, now handled by @Valid implementation instead
+        /*
+         * if (comment.getHeadline() == null || comment.getHeadline().isEmpty()) {
+         * throw new CustomBadRequestException("Comment headline cannot be empty");
+         * } else if (comment.getBody() == null || comment.getBody().isEmpty()) {
+         * throw new CustomBadRequestException("Comment body cannot be empty");
+         * }
+         */
+
         return coRepository.save(comment);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @JsonView(Views.Public.class)
     @PutMapping("/comments/{id}")
-    public Optional<Comment> putComment(@RequestBody Comment newComment, @PathVariable Long id,
+    public Optional<Comment> putComment(@Valid @RequestBody Comment newComment, @PathVariable Long id,
             Authentication authentication) {
         Optional<Comment> comment = coRepository.findById(id);
         String currentUser = authentication.getName();
@@ -93,10 +102,6 @@ public class CommentRestController {
             throw new CustomNotFoundException("Comment by the id of " + id + " does not exist");
         } else if (!comment.get().getAppUser().getUsername().equals(currentUser)) {
             throw new CustomForbiddenException("You do not have permissions to edit comment by the id of " + id);
-        } else if (newComment.getHeadline() == null || newComment.getHeadline().isEmpty()) {
-            throw new CustomBadRequestException("Comment headline cannot be empty");
-        } else if (newComment.getBody() == null || newComment.getBody().isEmpty()) {
-            throw new CustomBadRequestException("Comment body cannot be empty");
         } else if (newComment.getAppUser() == null
                 || !auRepository.findById(newComment.getAppUser().getAppUserId()).isPresent()) {
             throw new CustomBadRequestException("Wrong or missing AppUser Id");
@@ -104,6 +109,14 @@ public class CommentRestController {
                 || !lRepository.findById(newComment.getLocation().getLocationId()).isPresent()) {
             throw new CustomBadRequestException("Wrong or missing Location Id");
         }
+        // Obsolete manual validation, now handled by @Valid implementation instead
+        /*
+         * if (newComment.getHeadline() == null || newComment.getHeadline().isEmpty()) {
+         * throw new CustomBadRequestException("Comment headline cannot be empty");
+         * } else if (newComment.getBody() == null || newComment.getBody().isEmpty()) {
+         * throw new CustomBadRequestException("Comment body cannot be empty");
+         * }
+         */
 
         return comment.map(com -> {
             com.setHeadline(newComment.getHeadline());

@@ -60,39 +60,57 @@ public class AppUserRestController {
     @JsonView(Views.Internal.class)
     @PostMapping("/appusers")
     public AppUser postAppUser(@Valid @RequestBody AppUser appUser) {
+
         if (appUser.getAppUserId() != null) {
             throw new CustomBadRequestException("Do not include appUserId");
-        } else if (appUser.getUsername() == null || appUser.getUsername().isEmpty()) {
-            throw new CustomBadRequestException("AppUser username cannot be empty");
-        } else if (appUser.getUserRole() == null || appUser.getUserRole().isEmpty()) {
-            throw new CustomBadRequestException("AppUser role cannot be empty");
-        } else if (appUser.getPasswordHash() == null || appUser.getPasswordHash().isEmpty()) {
-            throw new CustomBadRequestException("AppUser passwordHash cannot be empty");
         }
+
         Optional<AppUser> isSame = auRepository.findByUsername(appUser.getUsername());
         if (isSame.isPresent()) {
             throw new CustomBadRequestException("AppUser username has to be unique");
         }
+
+        // Obsolete manual validation, now handled by @Valid implementation instead
+        /*
+         * if (appUser.getUsername() == null || appUser.getUsername().isEmpty()) {
+         * throw new CustomBadRequestException("AppUser username cannot be empty");
+         * } else if (appUser.getUserRole() == null || appUser.getUserRole().isEmpty())
+         * {
+         * throw new CustomBadRequestException("AppUser role cannot be empty");
+         * } else if (appUser.getPasswordHash() == null ||
+         * appUser.getPasswordHash().isEmpty()) {
+         * throw new CustomBadRequestException("AppUser passwordHash cannot be empty");
+         * }
+         */
         return auRepository.save(appUser);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Internal.class)
     @PutMapping("/appusers/{id}")
-    public Optional<AppUser> putAppUser(@RequestBody AppUser newAppUser, @PathVariable Long id) {
+    public Optional<AppUser> putAppUser(@Valid @RequestBody AppUser newAppUser, @PathVariable Long id) {
+
         if (!auRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("AppUser by the id of " + id + " does not exist");
-        } else if (newAppUser.getUsername() == null || newAppUser.getUsername().isEmpty()) {
-            throw new CustomBadRequestException("AppUser name cannot be empty");
-        } else if (newAppUser.getUserRole() == null || newAppUser.getUserRole().isEmpty()) {
-            throw new CustomBadRequestException("AppUser role cannot be empty");
-        } else if (newAppUser.getPasswordHash() == null || newAppUser.getPasswordHash().isEmpty()) {
-            throw new CustomBadRequestException("AppUser passwordHash cannot be empty");
         }
+
         Optional<AppUser> isSame = auRepository.findByUsername(newAppUser.getUsername());
         if (isSame.isPresent() && isSame.get().getAppUserId() != id) {
             throw new CustomBadRequestException("AppUser username has to be unique");
         }
+
+        // Obsolete manual validation, now handled by @Valid implementation instead
+        /*
+         * if (newAppUser.getUsername() == null || newAppUser.getUsername().isEmpty()) {
+         * throw new CustomBadRequestException("AppUser name cannot be empty");
+         * } else if (newAppUser.getUserRole() == null ||
+         * newAppUser.getUserRole().isEmpty()) {
+         * throw new CustomBadRequestException("AppUser role cannot be empty");
+         * } else if (newAppUser.getPasswordHash() == null ||
+         * newAppUser.getPasswordHash().isEmpty()) {
+         * throw new CustomBadRequestException("AppUser passwordHash cannot be empty");
+         * }
+         */
 
         return auRepository.findById(id)
                 .map(appUser -> {

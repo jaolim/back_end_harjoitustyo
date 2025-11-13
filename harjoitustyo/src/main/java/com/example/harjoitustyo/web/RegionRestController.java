@@ -22,6 +22,8 @@ import com.example.harjoitustyo.domain.Region;
 import com.example.harjoitustyo.domain.RegionRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @CrossOrigin(originPatterns = "*")
@@ -57,7 +59,7 @@ public class RegionRestController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.Elevated.class)
     @PostMapping("/regions")
-    public Region postRegion(@RequestBody Region region) {
+    public Region postRegion(@Valid @RequestBody Region region) {
         if (region.getRegionId() != null) {
             throw new CustomBadRequestException("Do not include regionId");
         } else if (region.getName() == null || region.getName().isEmpty()) {
@@ -72,7 +74,7 @@ public class RegionRestController {
 
     @JsonView(Views.Elevated.class)
     @PutMapping("/regions/{id}")
-    public Optional<Region> putRegion(@RequestBody Region newRegion, @PathVariable Long id) {
+    public Optional<Region> putRegion(@Valid @RequestBody Region newRegion, @PathVariable Long id) {
         if (!rRepository.findById(id).isPresent()) {
             throw new CustomNotFoundException("Region by the id of " + id + " does not exist");
         } else if (newRegion.getName() == null || newRegion.getName().isEmpty()) {
