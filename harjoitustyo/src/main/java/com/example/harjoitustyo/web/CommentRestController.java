@@ -90,7 +90,7 @@ public class CommentRestController {
         Optional<Comment> comment = coRepository.findById(id);
         String currentUser = authentication.getName();
         if (!coRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("Comment by id" + id + " does not exist");
+            throw new CustomNotFoundException("Comment by the id of " + id + " does not exist");
         } else if (!comment.get().getAppUser().getUsername().equals(currentUser)) {
             throw new CustomForbiddenException("You do not have permissions to edit comment by the id of " + id);
         } else if (newComment.getHeadline() == null || newComment.getHeadline().isEmpty()) {

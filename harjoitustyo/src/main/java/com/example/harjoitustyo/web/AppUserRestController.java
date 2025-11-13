@@ -81,7 +81,7 @@ public class AppUserRestController {
     @PutMapping("/appusers/{id}")
     public Optional<AppUser> putAppUser(@RequestBody AppUser newAppUser, @PathVariable Long id) {
         if (!auRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("AppUser by id" + id + " does not exist");
+            throw new CustomNotFoundException("AppUser by the id of " + id + " does not exist");
         } else if (newAppUser.getUsername() == null || newAppUser.getUsername().isEmpty()) {
             throw new CustomBadRequestException("AppUser name cannot be empty");
         } else if (newAppUser.getUserRole() == null || newAppUser.getUserRole().isEmpty()) {
@@ -112,7 +112,7 @@ public class AppUserRestController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteAppUser(@PathVariable Long id) {
         if (!auRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("AppUser by id " + id + " does not exist");
+            throw new CustomNotFoundException("AppUser by the id of " + id + " does not exist");
         }
         auRepository.deleteById(id);
     }

@@ -109,7 +109,7 @@ public class CityRestController {
     @DeleteMapping("/cities/{id}")
     public void deleteCity(@PathVariable Long id) {
         if (!cRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("City by id " + id + " does not exist");
+            throw new CustomNotFoundException("City by the id of " + id + " does not exist");
         }
         cRepository.deleteById(id);
     }

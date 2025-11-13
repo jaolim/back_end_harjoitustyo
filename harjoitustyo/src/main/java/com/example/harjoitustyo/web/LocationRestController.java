@@ -99,7 +99,7 @@ public class LocationRestController {
     @DeleteMapping("/locations/{id}")
     public void deleteLocation(@PathVariable Long id) {
         if (!lRepository.findById(id).isPresent()) {
-            throw new CustomNotFoundException("Location by id " + id + " does not exist");
+            throw new CustomNotFoundException("Location by the id of " + id + " does not exist");
         }
         lRepository.deleteById(id);
     }
