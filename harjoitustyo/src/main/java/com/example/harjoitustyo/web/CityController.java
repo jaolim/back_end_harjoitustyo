@@ -66,7 +66,7 @@ public class CityController {
         Optional<City> city = cRepository.findById(cityId);
         if (!city.isPresent()) {
             redirectAttributes.addFlashAttribute("errorMessage",
-                    "City by the ID of " + cityId + " does not exist.");
+                    "City by the id of " + cityId + " does not exist.");
             return "redirect:" + referer;
         }
         model.addAttribute("regions", rRepository.findAll());
