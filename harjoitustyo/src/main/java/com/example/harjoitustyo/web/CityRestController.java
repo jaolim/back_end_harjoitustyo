@@ -69,15 +69,15 @@ public class CityRestController {
         Optional<City> isSame = cRepository.findByName(city.getName());
         if (isSame.isPresent()) {
             throw new CustomBadRequestException("City name has to be unique");
+        } else if (city.getRegion() == null ||
+                !rRepository.findById(city.getRegion().getRegionId()).isPresent()) {
+            throw new CustomBadRequestException("Wrong or missing Region Id");
         }
 
         // Obsolete manual validation, now handled by @Valid implementation instead
         /*
          * if (city.getName() == null || city.getName().isEmpty()) {
          * throw new CustomBadRequestException("City name cannot be empty");
-         * } else if (city.getRegion() == null ||
-         * !rRepository.findById(city.getRegion().getRegionId()).isPresent()) {
-         * throw new CustomBadRequestException("Wrong or missing Region Id");
          * }
          */
         return cRepository.save(city);
@@ -94,6 +94,9 @@ public class CityRestController {
         Optional<City> isSame = cRepository.findByName(newCity.getName());
         if (isSame.isPresent() && isSame.get().getCityId() != id) {
             throw new CustomBadRequestException("City name has to be unique");
+        } else if (newCity.getRegion() == null
+                || !rRepository.findById(newCity.getRegion().getRegionId()).isPresent()) {
+            throw new CustomBadRequestException("Wrong or missing Region Id");
         }
 
         // Obsolete manual validation, now handled by @Valid implementation instead
