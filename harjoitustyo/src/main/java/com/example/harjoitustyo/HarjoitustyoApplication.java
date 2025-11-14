@@ -30,12 +30,12 @@ public class HarjoitustyoApplication {
 		return (args) -> {
 			if (!auRepository.existsByUsername("admin")) {
 
-				coRepository.deleteAll();
-				lRepository.deleteAll();
-				cRepository.deleteAll();
-				rRepository.deleteAll();
-				auRepository.deleteAll();
+				AppUser appUser1 = new AppUser("admin", "$2a$10$zNXa3MgyyUslVl.jL8950eGswQKEBKFVkSXlvghOPigjUcKXsasbK",
+						"ADMIN",
+						"adminTest", "userTestLast");
+				auRepository.save(appUser1);
 
+				/*
 				Region rUusimaa = new Region("Uusimaa",
 						"Finland’s most populous region, including Helsinki; urban, international, and coastal.",
 						"https://upload.wikimedia.org/wikipedia/commons/f/f9/Uusimaa.vaakuna.svg");
@@ -66,9 +66,6 @@ public class HarjoitustyoApplication {
 						"A wooden chapel offering silence in the busy city center.", cHelsinki,
 						"Simonkatu 7, 00100 Helsinki");
 
-				AppUser appUser1 = new AppUser("admin", "$2a$10$zNXa3MgyyUslVl.jL8950eGswQKEBKFVkSXlvghOPigjUcKXsasbK",
-						"ADMIN",
-						"adminTest", "userTestLast");
 				AppUser appUser2 = new AppUser("user", "$2a$10$YxQApzp3QttDxZO2Mx1BbeyQHH9YJaLDMciTk0zI/yiULbTJVZq/C",
 						"USER",
 						"userTest", "userTestLast");
@@ -104,7 +101,9 @@ public class HarjoitustyoApplication {
 						location2,
 						appUser2);
 
-				auRepository.save(appUser1);
+
+
+
 				auRepository.save(appUser2);
 				auRepository.save(appUser3);
 				auRepository.save(appUser4);
@@ -124,6 +123,7 @@ public class HarjoitustyoApplication {
 				coRepository.save(comment3);
 				coRepository.save(comment4);
 				coRepository.save(comment5);
+				*/
 			}
 		};
 	}
